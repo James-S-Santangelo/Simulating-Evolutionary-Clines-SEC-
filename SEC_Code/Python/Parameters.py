@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python2.7
 
 import math
 import sys as sys
@@ -31,4 +31,4 @@ qA = 1 - pA # Frequency of 'a' allele
 
 qB = 1 - pB # Frequency of 'b' allele
 
-
+export_path = sys.argv[3] # Path where final dataset will be exported

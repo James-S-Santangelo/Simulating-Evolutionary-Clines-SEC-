@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python2.7
 
 from Functions import *
 from Parameters import *
@@ -46,7 +46,7 @@ def simulate():
 		sim[s] = pops # Append results to 'sim' dictionary
 
 	# Changed directory and write results to csv.
-	os.chdir(sys.argv[3])
+	os.chdir(export_path)
 	write_to_csv(max_mig_rate, bot, sim)
 
 if __name__ == '__main__':
