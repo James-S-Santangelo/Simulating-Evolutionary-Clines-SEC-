@@ -28,6 +28,6 @@ While the above approach is useful for generating small amounts of data and test
 2. Ensure the parameters you would like to vary accept arguments from the command line (e.g. using sys.argv[1], sys.argv[2], etc.).
 3. Run the simulations in parallel using the following syntax
 	`parallel python Simulations.py ::: x1 x2 x3 ::: y1 y2 y3 ::: export_path`
-	where x1, x2, x3 refer to different values of the first parameter of interest and y1, y2, y3 refer to the sencond parameter of interest. More than 2 parameters can be varied. However beware, the above syntax will perform all pariwise combinations of specified parameter values. 'export_path' can be set from the command in Parameters.py, in which case the third argument above is not needed. 
+	where x1, x2, x3 refer to different values of the first parameter of interest and y1, y2, y3 refer to the sencond parameter of interest. More than 2 parameters can be varied. However beware, the above syntax will perform all pariwise combinations of specified parameter values. 'export_path' can be set from the command line or in Parameters.py, in which case the third argument above is not needed. 
 4. See all exported datasets in specified path (one for each run of the script).
 5. Run the Merge_csv.py script to merge all of the dataset exported from above. Make sure to specify the path to the datasets from the command line.
