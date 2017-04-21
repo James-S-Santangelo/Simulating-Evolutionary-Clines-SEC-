@@ -15,3 +15,19 @@ Ultimately, these simulations will provide me with a theoretical foundation upon
 
 
 ## How to use the code
+
+The Python code in SEC_Code/Python/ contains multiple scripts: (1) Parameters.py, (2) Functions.py, (3) Simulate.py, and (4) Merge_csv.py. **Only Simulate.py is required to actually run the simulation as it will import the other scripts automatically**.
+
+1. Open Parameters.py and set parameter values. Some of these take arguments from the command line (e.g. sys.argv), although this is not necessary
+2. Run the simulate function by typing python Simulate.py into the command line. **Note the simulation use Python 2.7**
+3. See dataset exported to specified path.
+
+While the above approach is useful for generating small amounts of data and testing code functionality, it does not provide sufficient data to address the above questions. For this we need to run multiple iteration (e.g. 1000 simulations) of varying parameter combinations. This is a computationally intensive process that almost certainly require the use of an external server. To do this, I recommend the following approach be taken. Note this assumes you have access to a server with multiple cores of computing power.
+
+1. Ensure you have GNU Parallel installed. Installation instructions can be found [here](https://www.gnu.org/software/parallel/).
+2. Ensure the parameters you would like to vary accept arguments from the command line (e.g. using sys.argv[1], sys.argv[2], etc.).
+3. Run the simulations in parallel using the following syntax
+	`parallel python Simulations.py ::: x1 x2 x3 ::: y1 y2 y3 ::: export_path`
+	where x1, x2, x3 refer to different values of the first parameter of interest and y1, y2, y3 refer to the sencond parameter of interest. More than 2 parameters can be varied. Hoever beware, the above syntax will perform all pariwise combinations of specified parameter values.
+4. See all exported dataset in specified path (one for each run of the script).
+5. Run the Merge_csv.py script to merge all of the dataset exported from above. Make sure to specify the path to the datasets from the command line.
