@@ -9,16 +9,22 @@ from datetime import datetime
 
 
 def merge_csv():
-	'''Function merges all csv''s in directory.
+	'''Function merges csvs in directory.
 
-	Directory of csv's and name of exported csv
-	taken from command line.
+	Merges .csv files with a user specified parameter value
+	in it's name. Useful for merging only csv's with data
+	corresponding to specific simulations.
 
 	Returns:
 	1. merged csv
 	'''
+	# Specify the parameter value for which datasets should be merged
+	param = sys.argv[1]
+	value = sys.argv[2]
+	parameter = param + value
+
 	# Change directory to path containing .csv files to merge
-	os.chdir(sys.argv[1])
+	os.chdir(sys.argv[3])
 
 	# Current date as local variable
 	datestring = datetime.strftime(datetime.now(), '%Y%m%d')
@@ -26,10 +32,11 @@ def merge_csv():
 	# Append all .csv files to python list
 	filelist = []
 	for csv in glob.glob("*.csv"):
-		filelist.append(csv)
+		if parameter in csv:
+			filelist.append(csv)
 
 	# Create file that will be the merged .csv file.
-	merged = open(datestring + "_" + sys.argv[2],"a")
+	merged = open(datestring + "_" + sys.argv[4],"a")
 
 	# For first .csv file in filelist, read all lines
 	for line in open(filelist[0]):
