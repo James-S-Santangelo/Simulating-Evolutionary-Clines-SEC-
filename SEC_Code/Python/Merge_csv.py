@@ -13,6 +13,9 @@ def merge_csv():
 
 	Directory of csv's and name of exported csv
 	taken from command line.
+
+	Return:
+	1. merged csv
 	'''
 	# Change directory to path containing .csv files to merge
 	os.chdir(sys.argv[1])
