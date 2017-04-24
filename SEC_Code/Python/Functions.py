@@ -202,6 +202,16 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 	allele_weighted_B = sum(allele_weighted_B[g] * Size[g] / sum(Size) for g in range(len(allele_weighted_B))) # Weighted allele 'B'
 	pA1 = ((1 - migration_weighted) * allele_freq(alleles[Akey]['A'])) + (migration_weighted * allele_weighted_A) # Probability of sampling 'A' in next generation
 	pB1 = ((1 - migration_weighted) * allele_freq(alleles[Akey]['B'])) + (migration_weighted * allele_weighted_B) # Probability of sampling 'B' in next generation
+
+	# Ensure that negative probabilities do not occur.
+	if pA1 < 0:
+        pA1 = 0
+    elif pA1 > 1.0:
+        pA1 = 1.0
+    if pB1 < 0:
+        pB1 = 0
+    elif pB1 > 1.0:
+        pB1 = 1.0
 	return pA1, pB1
 
 def allele_freq(locus):
