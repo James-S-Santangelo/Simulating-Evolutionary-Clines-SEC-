@@ -1,6 +1,6 @@
 ## Short-term goals
 
-~~1. Create goals~~
+1. ~~Create goals~~
 2. Add error caching to simulate function using `try`, `except`. Required for cases where rounding results in negative probability of sampling alleles. Currently, this results in termination of the script and loss of all simulations. Error caching will result in only the current iteration being terminated, allowing the simulations to continue following the error.
 3. Consider exporting data to [Feather format](http://blog.cloudera.com/blog/2016/03/feather-a-fast-on-disk-format-for-data-frames-for-r-and-python-powered-by-apache-arrow/) instead of currently used `.csv` format. Feather [appears to provide faster read times into R](https://blog.dominodatalab.com/the-r-data-i-o-shootout/).
 4. Add selection to simulations and allow the strength of selection on different alleles to vary across the landscape.
