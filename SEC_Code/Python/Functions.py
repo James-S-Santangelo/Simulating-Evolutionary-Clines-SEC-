@@ -205,13 +205,13 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 
 	# Ensure that negative probabilities do not occur.
 	if pA1 < 0:
-        pA1 = 0
-    elif pA1 > 1.0:
-        pA1 = 1.0
-    if pB1 < 0:
-        pB1 = 0
-    elif pB1 > 1.0:
-        pB1 = 1.0
+		pA1 = 0
+	elif pA1 > 1.0:
+		pA1 = 1.0
+	if pB1 < 0:
+		pB1 = 0
+	elif pB1 > 1.0:
+		pB1 = 1.0
 	return pA1, pB1
 
 def allele_freq(locus):
