@@ -19,7 +19,7 @@ K = 100 # Carrying capacity
 
 x_mat = 1 # Number of columns in matrix (i.e. landscape)
 
-y_mat = 20 # Number of rows in matrix (i.e. landscape)
+y_mat = 10 # Number of rows in matrix (i.e. landscape)
 
 bot = float(sys.argv[2]) # Proportion of alleles sampled upon creation of new populations (i.e. bottleneck proportion)
 

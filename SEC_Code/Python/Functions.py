@@ -159,6 +159,21 @@ def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K):
 	draw = choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution)
 	return list(draw)
 
+def matrix_full(Matrix):
+	'''Check if Matrix has been filled with populations
+
+	Parameters:
+	1. Matrix: Matrix: m x n dimensional matrix, initialized at the outset of each simulation.
+
+	Returns:
+	1. 0 if Matrix still has empty cells
+	2. 1 if Matrix is full
+	'''
+	if np.any(Matrix == 0):
+		return 0
+	else:
+		return 1
+
 def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 	'''Determines expected frequency of 'A' and 'B' alleles in next generation.
 
@@ -434,7 +449,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
-			pops[Akey].append([np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot])
+			pops[Akey].append([np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
 def write_to_csv(max_mig_rate, bot, sim):
@@ -450,11 +465,11 @@ def write_to_csv(max_mig_rate, bot, sim):
 	'''
 	datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 	DataFrame = []
-	Colnames = ["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot"]
+	Colnames = ["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full"]
 	for i in sim.keys():
 		for j, x in sim[i].items():
 			for z in x:
-				DataFrame.append([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11]])
+				DataFrame.append([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12]])
 	Test = pd.DataFrame(DataFrame, columns = Colnames)
 	Test.to_csv(datestring + "_SEC_Drift.Migration.Mig(m%.3f)(bot%.3f).csv" % (max_mig_rate, bot))
 
