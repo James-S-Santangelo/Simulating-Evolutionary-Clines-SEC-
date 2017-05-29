@@ -471,5 +471,5 @@ def write_to_csv(max_mig_rate, bot, sim):
 			for z in x:
 				DataFrame.append([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12]])
 	Test = pd.DataFrame(DataFrame, columns = Colnames)
-	Test.to_csv(datestring + "_SEC_Drift.Migration.Mig(m%.4f)(bot%.3f).csv" % (max_mig_rate, bot))
+	Test.to_csv(datestring + "_SEC_Drift.Migration_(m%.4f)(bot%.3f).csv" % (max_mig_rate, bot))
 
