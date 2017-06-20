@@ -257,7 +257,7 @@ def pop_growth(r, Akey, Avalue, K):
 	size = Avalue['S'][0] # Retrieve size of population. 'Akey' allows indexing of alleles dictionary in cline function
 	K = float(K)
 	new_size = size * K/(size + (K - size) * math.exp(-r)) # Calculates the proportional reduction of population growth rate based on desired carrying capacity ('K'). At 'K', growth rate = 1 = no change
-	return [int(round(new_size))]
+	return [int(math.ceil(new_size))]
 
 def bottle(bot, Akey, Avalue):
 	'''Calcualates number of alleles to sample based on bottleneck proportion
