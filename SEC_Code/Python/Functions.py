@@ -452,7 +452,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			pops[Akey].append([np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
-def write_to_csv(max_mig_rate, bot, sim):
+def write_to_csv(writer, sim):
 	'''Writes 'sim' dictionary to csv.
 
 	Parameters:
@@ -463,13 +463,8 @@ def write_to_csv(max_mig_rate, bot, sim):
 	Returns:
 	csv with results exported to directory of choice.
 	'''
-	datestring = datetime.strftime(datetime.now(), '%Y%m%d')
-	DataFrame = []
-	Colnames = ["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full"]
 	for i in sim.keys():
 		for j, x in sim[i].items():
 			for z in x:
-				DataFrame.append([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12]])
-	Test = pd.DataFrame(DataFrame, columns = Colnames)
-	Test.to_csv(datestring + "_SEC_Drift.Migration_(m%.4f)(bot%.3f).csv" % (max_mig_rate, bot))
+				writer.writerow([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12]])
 
