@@ -238,7 +238,11 @@ def allele_freq(locus):
 	Returns:
 	p: allele frequency as float.
 	'''
-	p = sum(1 * i.isupper() for i in locus)/float(len(locus))
+	sum = 0
+	for i in locus:
+		if i == 'A' or i == 'B':
+			sum += 1
+	p = sum / float(len(locus))
 	return p
 
 def pop_growth(r, Akey, Avalue, K):
