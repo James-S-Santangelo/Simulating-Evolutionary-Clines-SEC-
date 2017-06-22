@@ -9,9 +9,9 @@ from datetime import datetime
 import os
 import itertools
 import math
-import numpy as np
-import pandas as pd
-from numpy.random import choice
+# import numpy as np
+# import pandas as pd
+# from numpy.random import choice
 import glob
 import sys as sys
 from Parameters import x_mat, y_mat, max_mig_rate
@@ -41,6 +41,10 @@ def sample_population_B(locus_B, N):
 	'''
 	new_locus_B = [random.choice(locus_B) for _ in range(N)]
 	return new_locus_B
+
+def create_matrix(x_mat, y_mat):
+	Matrix = [[0. for i in range(x_mat)] for j in range(y_mat)]
+   	return Matrix
 
 def migration_rate(Distance_Dic, max_mig_rate):
 	'''Calculates migration rate between populations.
@@ -84,9 +88,8 @@ def Distance_Mig(x_mat, y_mat, max_mig_rate):
 	Returns:
 	'Distance_Dic' dictionary.
 	'''
-	Matrix = np.zeros((x_mat, y_mat), dtype = 'int')
-	rows = [i for i in range(Matrix.shape[0])]
-	cols = [i for i in range(Matrix.shape[1])]
+	rows = [i for i in range(x_mat)]
+	cols = [i for i in range(y_mat)]
 	matelem = [(i,j) for i in rows for j in cols]
 	dis = [[i,j] for i in matelem for j in matelem]
 	for i in dis:
@@ -169,7 +172,7 @@ def matrix_full(Matrix):
 	1. 0 if Matrix still has empty cells
 	2. 1 if Matrix is full
 	'''
-	if np.any(Matrix == 0):
+	if any(0 in j for j in Matrix1):
 		return 0
 	else:
 		return 1
