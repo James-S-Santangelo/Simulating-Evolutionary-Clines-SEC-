@@ -349,7 +349,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 		create = list(choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution))
 		if create[0] == '1': #If a '1' is sampled, create population
 			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix) if Akey in sublist][0]
-			x, y = pop_index[0][0], pop_index[1][0]
+			x, y = pop_index[0], pop_index[1]
 			X, Y = (x_mat - 1), (y_mat - 1)
 			# Create list containijng all neighboring cells
 			Nlist = [(x2, y2) for x2 in range(x-1, x+2)
@@ -458,7 +458,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
 			pop_index = [(j, sublist.index(Akey)) for j, sublist in enumerate(Matrix) if Akey in sublist][0]
-			pops[Akey].append([pop_index[0][0], pop_index[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
+			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
 def write_to_csv(writer, sim):
