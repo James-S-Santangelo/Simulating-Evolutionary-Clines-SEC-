@@ -172,7 +172,7 @@ def matrix_full(Matrix):
 	1. 0 if Matrix still has empty cells
 	2. 1 if Matrix is full
 	'''
-	if any(0 in j for j in Matrix1):
+	if any(0 in j for j in Matrix):
 		return 0
 	else:
 		return 1
@@ -200,7 +200,7 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 	1. pA1: Probability of sampling 'A' allele in next generation.
 	2. pA2: Probability of sampling 'B' allele in next generation.
 	'''
-	to_pop = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0] # Location of focal population in matrix.
+	to_pop = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix) if Akey in sublist][0] # Location of focal population in matrix.
 	migration_weighted = [] # List holding migration rates
 	allele_weighted_A = [] # List holding frequency of 'A' alleles
 	allele_weighted_B = [] # List holding frequency of 'B' alleles
@@ -209,7 +209,7 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 		if Akey == i:
 			pass
 		else:
-			from_pop = [(j, sublist.index(i)) for j, sublist in enumerate(Matrix1) if i in sublist][0] # Location of source population in matrix
+			from_pop = [(j, sublist.index(i)) for j, sublist in enumerate(Matrix) if i in sublist][0] # Location of source population in matrix
 			con = str(to_pop) + '.' + str(from_pop) # Create concatenated string from current focal population and source population
 			migration_weighted.append(Distance_Dic[con][1]) # Append migration rate to list
 			allele_weighted_A.append(allele_freq(alleles[i]['A'])) # Append alleles 'A' frequency to list
@@ -348,7 +348,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 		probability_distribution = [p_create, (1 - p_create)]
 		create = list(choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution))
 		if create[0] == '1': #If a '1' is sampled, create population
-			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0]
+			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix) if Akey in sublist][0]
 			x, y = pop_index[0][0], pop_index[1][0]
 			X, Y = (x_mat - 1), (y_mat - 1)
 			# Create list containijng all neighboring cells
@@ -457,7 +457,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
-			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0]
+			pop_index = [(j, sublist.index(Akey)) for j, sublist in enumerate(Matrix) if Akey in sublist][0]
 			pops[Akey].append([pop_index[0][0], pop_index[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
