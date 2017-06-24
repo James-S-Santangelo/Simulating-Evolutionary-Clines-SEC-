@@ -43,7 +43,7 @@ def sample_population_B(locus_B, N):
 	return new_locus_B
 
 def create_matrix(x_mat, y_mat):
-	Matrix = [[0 for i in range(x_mat)] for j in range(y_mat)]
+	Matrix = Matrix = [[0] * y_mat for i in range(x_mat)]
    	return Matrix
 
 def migration_rate(Distance_Dic, max_mig_rate):
