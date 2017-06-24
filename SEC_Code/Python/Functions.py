@@ -348,8 +348,9 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 		probability_distribution = [p_create, (1 - p_create)]
 		create = list(choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution))
 		if create[0] == '1': #If a '1' is sampled, create population
-			x, y = np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0]
-			X, Y = (Matrix.shape[0] - 1), (Matrix.shape[1] - 1)
+			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0]
+			x, y = pop_index[0][0], pop_index[1][0]
+			X, Y = (x_mat - 1), (y_mat - 1)
 			# Create list containijng all neighboring cells
 			Nlist = [(x2, y2) for x2 in range(x-1, x+2)
 				for y2 in range(y-1, y+2)
@@ -362,7 +363,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 			Nlist_red = []
 			for item in Nlist:
 				i, j = item[0], item[1]
-				if Matrix[i, j] == 0:
+				if Matrix[i][j] == 0:
 					Nlist_red.append(item)
 			# If all neighboring cells are occupied, pass
 			if not Nlist_red:
@@ -375,7 +376,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 				#Add two lists to 'alleles' dictionary ('A' and 'B'). Naming: 'Pop.number'
 				alleles['{0}'.format(pop_counter[0])] = {'A':sample_population_A(Avalue['A'], bottle(bot, Akey, Avalue)),'B':sample_population_B(Avalue['B'], bottle(bot, Akey, Avalue)), 'S':[bottle(bot, Akey, Avalue)]}
 				pops['{0}'.format(pop_counter[0])] = [] #Empty list for new population. Naming same as alleles.
-				Matrix[i, j] = pop_counter[0]
+				Matrix[i][j] = pop_counter[0]
 		else:
 			pass
 
@@ -456,7 +457,8 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
-			pops[Akey].append([np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
+			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0]
+			pops[Akey].append([pop_index[0][0], pop_index[1][0], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
 def write_to_csv(writer, sim):
