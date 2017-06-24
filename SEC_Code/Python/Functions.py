@@ -348,7 +348,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 		probability_distribution = [p_create, (1 - p_create)]
 		create = list(choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution))
 		if create[0] == '1': #If a '1' is sampled, create population
-			pop_index = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix) if Akey in sublist][0]
+			pop_index = [(i, sublist.index(int(Akey))) for i, sublist in enumerate(Matrix) if int(Akey) in sublist][0]
 			x, y = pop_index[0], pop_index[1]
 			X, Y = (x_mat - 1), (y_mat - 1)
 			# Create list containijng all neighboring cells
@@ -457,7 +457,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
-			pop_index = [(j, sublist.index(Akey)) for j, sublist in enumerate(Matrix) if Akey in sublist][0]
+			pop_index = [(j, sublist.index(int(Akey))) for j, sublist in enumerate(Matrix) if int(Akey) in sublist][0]
 			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
