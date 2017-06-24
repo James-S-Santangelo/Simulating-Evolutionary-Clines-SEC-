@@ -41,8 +41,8 @@ def simulate():
 			pop_counter = [1]
 			pops = OrderedDict({'1':[]}) # Re-initialize dictionary to store populations
 			alleles = OrderedDict({'1':{'A':[],'B':[],'S':[N]}}) # Re-initialize dictionary to store allele lists
-			Matrix = np.zeros((x_mat, y_mat), dtype = 'int')
-			Matrix[0, 0] = 1
+			Matrix = create_matrix(x_mat, y_mat)
+			Matrix[0][0] = 1
 
 			# Initialize allele lists from which population 1 will sample its
 			# alleles in generation 1.

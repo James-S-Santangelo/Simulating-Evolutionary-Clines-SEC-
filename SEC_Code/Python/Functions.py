@@ -11,7 +11,7 @@ import itertools
 import math
 # import numpy as np
 # import pandas as pd
-# from numpy.random import choice
+from numpy.random import choice
 import glob
 import sys as sys
 from Parameters import x_mat, y_mat, max_mig_rate
