@@ -200,7 +200,7 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 	1. pA1: Probability of sampling 'A' allele in next generation.
 	2. pA2: Probability of sampling 'B' allele in next generation.
 	'''
-	to_pop = (np.where(Matrix == int(Akey))[0][0], np.where(Matrix == int(Akey))[1][0]) # Location of focal population in matrix.
+	to_pop = [(i, sublist.index(Akey)) for i, sublist in enumerate(Matrix1) if Akey in sublist][0] # Location of focal population in matrix.
 	migration_weighted = [] # List holding migration rates
 	allele_weighted_A = [] # List holding frequency of 'A' alleles
 	allele_weighted_B = [] # List holding frequency of 'B' alleles
@@ -209,7 +209,7 @@ def alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic):
 		if Akey == i:
 			pass
 		else:
-			from_pop = (np.where(Matrix == int(i))[0][0], np.where(Matrix == int(i))[1][0]) # Location of source population in matrix
+			from_pop = [(j, sublist.index(i)) for j, sublist in enumerate(Matrix1) if i in sublist][0] # Location of source population in matrix
 			con = str(to_pop) + '.' + str(from_pop) # Create concatenated string from current focal population and source population
 			migration_weighted.append(Distance_Dic[con][1]) # Append migration rate to list
 			allele_weighted_A.append(allele_freq(alleles[i]['A'])) # Append alleles 'A' frequency to list
