@@ -43,7 +43,7 @@ def sample_population_B(locus_B, N):
 	return new_locus_B
 
 def create_matrix(x_mat, y_mat):
-	Matrix = [[0. for i in range(x_mat)] for j in range(y_mat)]
+	Matrix = [[0 for i in range(x_mat)] for j in range(y_mat)]
    	return Matrix
 
 def migration_rate(Distance_Dic, max_mig_rate):
@@ -360,6 +360,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 					(0 <= x2 <= X) and
 					(0 <= y2 <= Y))]
 			# Reduced list containing only neighboring cells that lack a population
+			print Matrix
 			Nlist_red = []
 			for item in Nlist:
 				i, j = item[0], item[1]
