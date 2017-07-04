@@ -6,6 +6,7 @@ import sys as sys
 import os
 import glob as glob
 from datetime import datetime
+import shutil
 
 
 def merge_csv():
@@ -36,7 +37,7 @@ def merge_csv():
 			filelist.append(csv)
 
 	# Create file that will be the merged .csv file.
-	merged = open(datestring + "_" + sys.argv[4],"a")
+	merged = open(datestring + "_" + sys.argv[4] + ".csv", "a")
 
 	# For first .csv file in filelist, read all lines
 	for line in open(filelist[0]):
@@ -50,6 +51,9 @@ def merge_csv():
 			merged.write(line)
 		f.close()
 	merged.close()
+
+	for csv in filelist:
+		shutil.move(csv, "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/To_delete")
 
 if __name__ == '__main__':
 	merge_csv() # Call function if script is run 'main'
