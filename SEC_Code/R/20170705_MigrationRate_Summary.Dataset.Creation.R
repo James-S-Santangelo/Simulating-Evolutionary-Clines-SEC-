@@ -1,0 +1,53 @@
+#Working directory for datasets varying migration rate and bottleneck proportion
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
+
+#Load dataset varying migration rate and add distance column
+dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', header = T)
+dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
+dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
+
+library(dplyr)
+library(broom)
+library("data.table", lib="~/Rpackages")
+
+#Run model testing for change in HCN frequency with distance across matrix. 
+#Performed separately for every simulation and generation, begining with the generation the matrix fill.
+dat_Miglm_sum <- dat_Mig_Vary %>%
+  group_by(Mig_rate, Sim, Generation) %>% 
+  filter(Mat.full == 1) %>%
+  do(FitMigSim = lm(Cyan ~ Distance, data = .))
+
+#Create data frame with results from linear models
+FitMigSimCoef = tidy(dat_Miglm_sum, FitMigSim)
+
+#Subset data frame to include only slopes and P-values for the effect of distance
+FitMigSimCoef <- FitMigSimCoef %>% 
+  filter(term == "Distance") %>%
+  select(estimate, p.value)
+
+#Write dataset with all models to csv
+today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+fwrite(FitMigSimCoef, file = paste(today, "FitMigSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
+
+#Get mean slope and proportion of significantly positive and negative slopes
+#from linear models. Done for each generation, averaged across simulations. 
+#Confidence intervals are also calculated.
+Mig_rate_Vary_SlopeSum <- FitMigSimCoef %>%
+  group_by(Mig_rate, Generation) %>%
+  summarise(mean = mean(estimate), 
+            sd = sd(estimate), 
+            n = length(estimate), 
+            se = (sd/sqrt(n)), 
+            ci.lower = mean - 1.96*se,
+            ci.upper = mean + 1.96*se,
+            prop_sigPos = (sum(estimate > 0 & p.value < 0.05)/length(estimate)), 
+            se_Pos = sqrt((prop_sigPos*(1 - prop_sigPos)/length(estimate))),
+            ci.lower.Pos = prop_sigPos - 1.96*se_Pos,
+            ci.upper.Pos = prop_sigPos + 1.96*se_Pos,
+            prop_sigNeg = (sum(estimate < 0 & p.value < 0.05)/length(estimate)),
+            se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
+            ci.lower.Neg = prop_sigNeg - 1.96*se_Neg,
+            ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
+
+#Write dataset with summary info to csv
+fwrite(FitMigSimCoef, file = paste(today, "Mig_rate_Vary_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
