@@ -1,3 +1,8 @@
+#Load required packages
+library(dplyr)
+library(broom)
+library("data.table", lib="~/Rpackages")
+
 #Working directory for datasets varying migration rate and bottleneck proportion
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
@@ -5,10 +10,6 @@ setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/S
 dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', header = T)
 dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
-
-library(dplyr)
-library(broom)
-library("data.table", lib="~/Rpackages")
 
 #Run model testing for change in HCN frequency with distance across matrix. 
 #Performed separately for every simulation and generation, begining with the generation the matrix fill.
