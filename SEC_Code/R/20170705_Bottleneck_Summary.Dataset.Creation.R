@@ -30,6 +30,9 @@ FitBotSimCoef <- FitBotSimCoef %>%
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 fwrite(FitBotSimCoef, file = paste(today, "FitBotSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
 
+#Remove initial datasets to prevent oversoncumption of RAM
+rm(dat_Bot_Vary, dat_Botlm_sum)
+
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Done for each generation, averaged across simulations. 
 #Confidence intervals are also calculated.
