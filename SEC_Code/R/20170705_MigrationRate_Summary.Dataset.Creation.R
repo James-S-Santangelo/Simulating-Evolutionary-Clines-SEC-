@@ -43,16 +43,16 @@ MigRate_SlopeSum_Gen <- FitMigSimCoef %>%
             sd = sd(estimate), 
             n = length(estimate), 
             se = (sd/sqrt(n)), 
-            ci.lower = mean - 1.96*se,
-            ci.upper = mean + 1.96*se,
+            ci.lower = 1.96*se,
+            ci.upper = 1.96*se,
             prop_sigPos = (sum(estimate > 0 & p.value < 0.05)/length(estimate)), 
             se_Pos = sqrt((prop_sigPos*(1 - prop_sigPos)/length(estimate))),
-            ci.lower.Pos = prop_sigPos - 1.96*se_Pos,
-            ci.upper.Pos = prop_sigPos + 1.96*se_Pos,
+            ci.lower.Pos = 1.96*se_Pos,
+            ci.upper.Pos = 1.96*se_Pos,
             prop_sigNeg = (sum(estimate < 0 & p.value < 0.05)/length(estimate)),
             se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
-            ci.lower.Neg = prop_sigNeg - 1.96*se_Neg,
-            ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
+            ci.lower.Neg = 1.96*se_Neg,
+            ci.upper.Neg = 1.96*se_Neg)
 
 #Write dataset with summary info to csv
 fwrite(MigRate_SlopeSum_Gen, file = paste(today, "MigRate_SlopeSum_Gen.csv", sep = "_"), sep = ",", col.names = TRUE)
@@ -65,16 +65,16 @@ MigRate_SlopeSum <- FitMigSimCoef %>%
             sd = sd(estimate), 
             n = length(estimate), 
             se = (sd/sqrt(n)), 
-            ci.lower = mean - 1.96*se,
-            ci.upper = mean + 1.96*se,
+            ci.lower = 1.96*se,
+            ci.upper = 1.96*se,
             prop_sigPos = (sum(estimate > 0 & p.value < 0.05)/length(estimate)), 
             se_Pos = sqrt((prop_sigPos*(1 - prop_sigPos)/length(estimate))),
-            ci.lower.Pos = prop_sigPos - 1.96*se_Pos,
-            ci.upper.Pos = prop_sigPos + 1.96*se_Pos,
+            ci.lower.Pos = 1.96*se_Pos,
+            ci.upper.Pos = 1.96*se_Pos,
             prop_sigNeg = (sum(estimate < 0 & p.value < 0.05)/length(estimate)),
             se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
-            ci.lower.Neg = prop_sigNeg - 1.96*se_Neg,
-            ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
+            ci.lower.Neg = 1.96*se_Neg,
+            ci.upper.Neg = 1.96*se_Neg)
 
 #Wrtie dataset to disk
 fwrite(MigRate_SlopeSum, file = paste(today, "MigRate_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
