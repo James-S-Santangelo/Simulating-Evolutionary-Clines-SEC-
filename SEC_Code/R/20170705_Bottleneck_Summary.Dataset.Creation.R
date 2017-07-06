@@ -7,7 +7,8 @@ library("data.table", lib="~/Rpackages")
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 # Load dataset that varies the bottleneck proportion and add distance column
-dat_Bot_Vary <- fread('20170704_Merged_BotOnly.csv', header = T)
+colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "Acyan", "Mat.full")
+dat_Bot_Vary <- fread('20170704_Merged_BotOnly.csv', select = colsToKeep, header = T)
 dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 dat_Bot_Vary$Cyan  <- 1 - dat_Bot_Vary$Acyan
 
@@ -21,6 +22,9 @@ dat_Botlm_sum <- dat_Bot_Vary %>%
 #Create data frame with results from linear models
 FitBotSimCoef = tidy(dat_Botlm_sum, FitBotSim)
 
+#Remove initial datasets
+rm(dat_Bot_Vary, dat_Botlm_sum)
+
 #Subset data frame to include only slopes and P-values for the effect of distance
 FitBotSimCoef <- FitBotSimCoef %>% 
   filter(term == "Distance") %>%
@@ -29,9 +33,6 @@ FitBotSimCoef <- FitBotSimCoef %>%
 #Write dataset with all models to csv
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 fwrite(FitBotSimCoef, file = paste(today, "FitBotSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
-
-#Remove initial datasets to prevent oversoncumption of RAM
-rm(dat_Bot_Vary, dat_Botlm_sum)
 
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Done for each generation, averaged across simulations. 

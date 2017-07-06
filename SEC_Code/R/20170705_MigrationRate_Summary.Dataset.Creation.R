@@ -7,12 +7,13 @@ library("data.table", lib="~/Rpackages")
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 #Load dataset varying migration rate and add distance column
-dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', header = T)
+colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "Acyan", "Mat.full")
+dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', select = colsToKeep, header = T)
 dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
 
 #Run model testing for change in HCN frequency with distance across matrix. 
-#Performed separately for every simulation and generation, begining with the generation the matrix fill.
+#Performed separately for every simulation and generation, begining with the generation the matrix full.
 dat_Miglm_sum <- dat_Mig_Vary %>%
   group_by(Mig_rate, Sim, Generation) %>% 
   filter(Mat.full == 1) %>%
@@ -20,6 +21,9 @@ dat_Miglm_sum <- dat_Mig_Vary %>%
 
 #Create data frame with results from linear models
 FitMigSimCoef = tidy(dat_Miglm_sum, FitMigSim)
+
+#Remove initial datasets
+rm(dat_Mig_Vary, dat_Miglm_sum)
 
 #Subset data frame to include only slopes and P-values for the effect of distance
 FitMigSimCoef <- FitMigSimCoef %>% 
@@ -29,9 +33,6 @@ FitMigSimCoef <- FitMigSimCoef %>%
 #Write dataset with all models to csv
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 fwrite(FitMigSimCoef, file = paste(today, "FitMigSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
-
-#Remove initial datasets to prevent oversoncumption of RAM
-rm(dat_Mig_Vary, dat_Miglm_sum)
 
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Done for each generation, averaged across simulations. 
