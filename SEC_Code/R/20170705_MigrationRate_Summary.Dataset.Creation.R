@@ -59,8 +59,8 @@ fwrite(MigRate_SlopeSum_Gen, file = paste(today, "MigRate_SlopeSum_Gen.csv", sep
 
 #Get mean slope and proportion of significantly positive and negative slopes
 #for each value of the migration rate. 95% CI's also calculated.
-MigRate_SlopeSum_Gen <- FitMigSimCoef %>%
-  group_by(Mig_rate, Generation) %>%
+MigRate_SlopeSum <- FitMigSimCoef %>%
+  group_by(Mig_rate) %>%
   summarise(mean = mean(estimate), 
             sd = sd(estimate), 
             n = length(estimate), 
@@ -77,4 +77,4 @@ MigRate_SlopeSum_Gen <- FitMigSimCoef %>%
             ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
 
 #Wrtie dataset to disk
-fwrite(MigRate_SlopeSum_Gen, file = paste(today, "MigRate_SlopeSum_Gen.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(MigRate_SlopeSum, file = paste(today, "MigRate_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
