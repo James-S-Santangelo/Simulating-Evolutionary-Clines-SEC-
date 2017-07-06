@@ -37,7 +37,7 @@ fwrite(FitMigSimCoef, file = paste(today, "FitMigSimCoef.csv", sep = "_"), sep =
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Done for each generation, averaged across simulations. 
 #Confidence intervals are also calculated.
-Mig_rate_Vary_SlopeSum <- FitMigSimCoef %>%
+MigRate_SlopeSum_Gen <- FitMigSimCoef %>%
   group_by(Mig_rate, Generation) %>%
   summarise(mean = mean(estimate), 
             sd = sd(estimate), 
@@ -55,4 +55,26 @@ Mig_rate_Vary_SlopeSum <- FitMigSimCoef %>%
             ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
 
 #Write dataset with summary info to csv
-fwrite(FitMigSimCoef, file = paste(today, "Mig_rate_Vary_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(MigRate_SlopeSum_Gen, file = paste(today, "MigRate_SlopeSum_Gen.csv", sep = "_"), sep = ",", col.names = TRUE)
+
+#Get mean slope and proportion of significantly positive and negative slopes
+#for each value of the migration rate. 95% CI's also calculated.
+MigRate_SlopeSum_Gen <- FitMigSimCoef %>%
+  group_by(Mig_rate, Generation) %>%
+  summarise(mean = mean(estimate), 
+            sd = sd(estimate), 
+            n = length(estimate), 
+            se = (sd/sqrt(n)), 
+            ci.lower = mean - 1.96*se,
+            ci.upper = mean + 1.96*se,
+            prop_sigPos = (sum(estimate > 0 & p.value < 0.05)/length(estimate)), 
+            se_Pos = sqrt((prop_sigPos*(1 - prop_sigPos)/length(estimate))),
+            ci.lower.Pos = prop_sigPos - 1.96*se_Pos,
+            ci.upper.Pos = prop_sigPos + 1.96*se_Pos,
+            prop_sigNeg = (sum(estimate < 0 & p.value < 0.05)/length(estimate)),
+            se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
+            ci.lower.Neg = prop_sigNeg - 1.96*se_Neg,
+            ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
+
+#Wrtie dataset to disk
+fwrite(MigRate_SlopeSum_Gen, file = paste(today, "MigRate_SlopeSum_Gen.csv", sep = "_"), sep = ",", col.names = TRUE)

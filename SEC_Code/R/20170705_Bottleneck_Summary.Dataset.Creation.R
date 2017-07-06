@@ -37,7 +37,7 @@ fwrite(FitBotSimCoef, file = paste(today, "FitBotSimCoef.csv", sep = "_"), sep =
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Done for each generation, averaged across simulations. 
 #Confidence intervals are also calculated.
-Bot_Vary_SlopeSum <- FitBotSimCoef %>%
+Bot_SlopeSum_Gen <- FitBotSimCoef %>%
   group_by(bot, Generation) %>%
   summarise(mean = mean(estimate), 
             sd = sd(estimate), 
@@ -55,4 +55,26 @@ Bot_Vary_SlopeSum <- FitBotSimCoef %>%
             ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
 
 #Write dataset with summary info to csv
-fwrite(FitBotSimCoef, file = paste(today, "Bot_Vary_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(Bot_SlopeSum_Gen, file = paste(today, "Bot_SlopeSum_Gen.csv", sep = "_"), sep = ",", col.names = TRUE)
+
+#Get mean slope and proportion of significantly positive and negative slopes
+#for each value of the bottleneck proportion. 95% CI's also calculated.
+Bot_SlopeSum <- FitBotSimCoef %>%
+  group_by(bot) %>%
+  summarise(mean = mean(estimate), 
+            sd = sd(estimate), 
+            n = length(estimate), 
+            se = (sd/sqrt(n)), 
+            ci.lower = mean - 1.96*se,
+            ci.upper = mean + 1.96*se,
+            prop_sigPos = (sum(estimate > 0 & p.value < 0.05)/length(estimate)), 
+            se_Pos = sqrt((prop_sigPos*(1 - prop_sigPos)/length(estimate))),
+            ci.lower.Pos = prop_sigPos - 1.96*se_Pos,
+            ci.upper.Pos = prop_sigPos + 1.96*se_Pos,
+            prop_sigNeg = (sum(estimate < 0 & p.value < 0.05)/length(estimate)),
+            se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
+            ci.lower.Neg = prop_sigNeg - 1.96*se_Neg,
+            ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
+
+#Write dataset with summary info to csv
+fwrite(Bot_SlopeSum, file = paste(today, "Bot_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
