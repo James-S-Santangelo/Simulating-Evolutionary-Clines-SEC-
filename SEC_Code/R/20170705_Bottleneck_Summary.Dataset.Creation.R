@@ -55,4 +55,4 @@ Bot_Vary_SlopeSum <- FitBotSimCoef %>%
             ci.upper.Neg = prop_sigNeg + 1.96*se_Neg)
 
 #Write dataset with summary info to csv
-fwrite(FitMigSimCoef, file = paste(today, "Bot_Vary_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(FitBotSimCoef, file = paste(today, "Bot_Vary_SlopeSum.csv", sep = "_"), sep = ",", col.names = TRUE)
