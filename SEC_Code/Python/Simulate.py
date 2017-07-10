@@ -2,7 +2,6 @@
 
 from Functions import *
 from Parameters import *
-from tqdm import *
 
 def simulate():
 	'''Generate 'sims' simulations of 'cline' function.
@@ -32,7 +31,7 @@ def simulate():
 		writer.writerow(["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full"])
 
 		# Loop for 'sims' iterations
-		for s in tqdm(range(sims)):
+		for s in range(sims):
 
 			sim = {}
 
