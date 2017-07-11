@@ -11,11 +11,13 @@ steps = 40 # Number of generations
 
 N =  10 # Initial population size (i.e. starting size of first initialized population)
 
-sims = 10 # Number of simulations
+sims = 15 # Number of simulations
 
 max_mig_rate = float(0.5) # Maximum migration rate. Declines linearly with distance. See 'migration_rate' function in Functions.py
 
-K = 1000 # Carrying capacity
+# Carrying capacity
+max_K = 1000
+min_K = 1000 
 
 x_mat = 1 # Number of columns in matrix (i.e. landscape)
 
