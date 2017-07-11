@@ -15,26 +15,26 @@ from Parameters import x_mat, y_mat, max_mig_rate
 
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_length=100):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        bar_length  - Optional  : character length of bar (Int)
-    """
-    str_format = "{0:." + str(decimals) + "f}"
-    percents = str_format.format(100 * (iteration / float(total)))
-    filled_length = int(round(bar_length * iteration / float(total)))
-    bar = '#' * filled_length + '-' * (bar_length - filled_length)
+	"""
+	Call in a loop to create terminal progress bar
+	@params:
+		iteration   - Required  : current iteration (Int)
+		total       - Required  : total iterations (Int)
+		prefix      - Optional  : prefix string (Str)
+		suffix      - Optional  : suffix string (Str)
+		decimals    - Optional  : positive number of decimals in percent complete (Int)
+		bar_length  - Optional  : character length of bar (Int)
+	"""
+	str_format = "{0:." + str(decimals) + "f}"
+	percents = str_format.format(100 * (iteration / float(total)))
+	filled_length = int(round(bar_length * iteration / float(total)))
+	bar = '#' * filled_length + '-' * (bar_length - filled_length)
 
-    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
+	sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
 
-    if iteration == total:
-        sys.stdout.write('\n')
-    sys.stdout.flush()
+	if iteration == total:
+		sys.stdout.write('\n')
+	sys.stdout.flush()
 
 def sample_population_A(locus_A, N):
 	'''Samples N alleles from locus_A allele list.
@@ -63,8 +63,8 @@ def sample_population_B(locus_B, N):
 	return new_locus_B
 
 def create_matrix(x_mat, y_mat):
-	Matrix = Matrix = [[0] * y_mat for i in range(x_mat)]
-   	return Matrix
+	Matrix = [[0] * y_mat for i in range(x_mat)]
+	return Matrix
 
 def migration_rate(Distance_Dic, max_mig_rate):
 	'''Calculates migration rate between populations.
@@ -142,7 +142,30 @@ def choice(population, weights):
 	idx = bisect.bisect(cdf_vals, x)
 	return population[idx]
 
-def sample_alleles_A(pA1, Akey, Avalue, alleles, r, K):
+def varyK(Distance_Dic, max_K, min_K, x_mat, y_mat):
+
+	max_dis = max(Distance_Dic.values())[0]
+	m = (min_K - max_K) / (max_dis - 0)
+
+	Matrix = create_matrix(x_mat, y_mat)
+	Matrix_indices = [[(i, j) for j, v in enumerate(sublist)] for i, sublist in enumerate(Matrix)]
+	Flat_indices = [item for sublist in Matrix_indices for item in sublist]
+	start = (0, 0)
+
+	groups = []
+	for i in Flat_indices:
+		con = '{0}.{1}'.format(start, i)
+
+		if con in Distance_Dic.keys():
+			groups.append([con, Distance_Dic[con][0]])
+
+	groups = [[i[0].split(".")[1], i[1]] for i in groups]
+
+	K_dict = {'{0}'.format(key1):[key2, max_K + m * key2] for key1, key2 in groups}
+
+	return K_dict
+
+def sample_alleles_A(pA1, Akey, Avalue, alleles, r, K_dict, Matrix):
 	'''Sample alleles at locus A from infinite allele pool.
 
 	Sample N alleles from probability distribution based on expected frequency
@@ -165,11 +188,11 @@ def sample_alleles_A(pA1, Akey, Avalue, alleles, r, K):
 	list containing sampled 'A' alleles
 	'''
 	population = 'Aa' # Possible alleles to sample
-	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K) # Number to sample. Corresponds to next generation's size.
+	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K_dict, Matrix) # Number to sample. Corresponds to next generation's size.
 	weights = [pA1, (1 - pA1)] # Sampling probabilities. Returned by 'alleles_next_gen'
 	return [choice(population, weights) for i in range(number_of_items_to_pick[0])] # Return list of newly sampled alleles. Becomes allele pool in the next generation
 
-def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K):
+def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K_dict, Matrix):
 	'''Sample alleles at locus B from infinite allele pool.
 
 	Sample N alleles from probability distribution based on expected frequency
@@ -192,7 +215,7 @@ def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K):
 	list containing sampled 'B' alleles
 	'''
 	population = 'Bb' # Possible alleles to sample
-	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K) # Number to sample. Corresponds to next generation's size.
+	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K_dict, Matrix) # Number to sample. Corresponds to next generation's size.
 	weights = [pB1, (1 - pB1)] # Sampling probabilities. Returned by 'alleles_next_gen'
 	return [choice(population, weights) for i in range(number_of_items_to_pick[0])] # Return list of newly sampled alleles. Becomes allele pool in the next generation
 
@@ -282,7 +305,7 @@ def allele_freq(locus):
 	p = sum / float(len(locus))
 	return p
 
-def pop_growth(r, Akey, Avalue, K):
+def pop_growth(r, Akey, Avalue, K_dict, Matrix):
 	'''Calculates population size in next generation based on logistic model.
 
 	Parameters:
@@ -295,8 +318,10 @@ def pop_growth(r, Akey, Avalue, K):
 	Returns:
 	Next generation's population size as interger (rounded up).
 	'''
+	pop = str([(i, sublist.index(int(Akey))) for i, sublist in enumerate(Matrix) if int(Akey) in sublist][0])
+
 	size = Avalue['S'][0] # Retrieve size of population. 'Akey' allows indexing of alleles dictionary in cline function
-	K = float(K)
+	K = K_dict[pop][1]
 	new_size = size * K/(size + (K - size) * math.exp(-r)) # Calculates the proportional reduction of population growth rate based on desired carrying capacity ('K'). At 'K', growth rate = 1 = no change
 	return [int(math.ceil(new_size))]
 
@@ -315,7 +340,7 @@ def bottle(bot, Akey, Avalue):
 	'''
 	return int(math.ceil(bot * Avalue['S'][0]))
 
-def prob_create(K, max_p_create, Akey, Avalue):
+def prob_create(max_K, max_p_create, Akey, Avalue):
 	'''Calculates probability of creating new population based on current size.
 
 	Based on desired maximum probability of population creation, determines
@@ -333,7 +358,7 @@ def prob_create(K, max_p_create, Akey, Avalue):
 	Returns:
 	probability of creating a new population as float.
 	'''
-	m = (max_p_create - 0)/(K - 0) # Slope. Assumes close to no migration at max distance. Relized migration at max distance may be slightly greater than 0 due to rounding.
+	m = (max_p_create - 0)/(max_K - 0) # Slope. Assumes close to no migration at max distance. Relized migration at max distance may be slightly greater than 0 due to rounding.
 	Size = Avalue['S'][0]
 	p_create = Size * m
 	return float(p_create)
@@ -343,7 +368,7 @@ def prob_create(K, max_p_create, Akey, Avalue):
 # dictionary. Also adds population to matrix. This function first evaluates whether a population will
 # be created then randomly selects a vacant neighboring cell where population will go. If no cells are
 # vacant, the function passes.
-def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter):
+def create_population(max_p_create, max_K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter):
 	'''Creates new populations and initializes them in existing dictionaries
 
 	Create new population as empty list and add to 'pops' dictionary. Also create
@@ -378,7 +403,7 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 	else:
 		population = '10'
 		number_of_items_to_pick = 1
-		p_create = prob_create(K, max_p_create, Akey, Avalue)
+		p_create = prob_create(max_K, max_p_create, Akey, Avalue)
 		weights = [p_create, (1 - p_create)]
 		create = [choice(population, weights) for i in range(number_of_items_to_pick)]
 		if create[0] == '1': #If a '1' is sampled, create population
@@ -439,7 +464,7 @@ def phenotype(pA, pB):
 # Cline function. Every generation, alleles are exchanged among populations. Populations follow
 # logistic population growth. Ever generation, every population has some probability (p) of generating a new population, with alleles
 # sampled from the population that created it.
-def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, K, r, max_mig_rate, pop_counter, Distance_Dic):
+def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic):
 	'''Generates cline based on number of generations.
 
 	Loops over all populations for desired number of generations (i.e. steps).
@@ -482,16 +507,16 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 					Avalue['B'] = (sample_population_B(locus_B, N))
 				else:
 					#If allele lists are not empty, sample from previously sampled set of alleles.
-					Avalue['S'] = pop_growth(r, Akey, Avalue, K)
-					Avalue['A'] = sample_alleles_A(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[0], Akey, Avalue, alleles, r, K)
-					Avalue['B'] = sample_alleles_B(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[1], Akey, Avalue, alleles, r, K)
-			create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter) #Create population. Alleles will be sampled (see above). Population is currently empty list
+						Avalue['S'] = pop_growth(r, Akey, Avalue, K_dict, Matrix)
+						Avalue['A'] = sample_alleles_A(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[0], Akey, Avalue, alleles, r, K_dict, Matrix)
+						Avalue['B'] = sample_alleles_B(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[1], Akey, Avalue, alleles, r, K_dict, Matrix)
+			create_population(max_p_create, max_K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter) #Create population. Alleles will be sampled (see above). Population is currently empty list
 		for Akey, Avalue in alleles.items():
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
 			pop_index = [(j, sublist.index(int(Akey))) for j, sublist in enumerate(Matrix) if int(Akey) in sublist][0]
-			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K, r, max_p_create, bot, matrix_full(Matrix)])
+			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K_dict[str(pop_index)][1], r, max_p_create, bot, matrix_full(Matrix)])
 	return pops
 
 def write_to_csv(writer, sim):

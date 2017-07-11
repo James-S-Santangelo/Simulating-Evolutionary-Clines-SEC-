@@ -21,6 +21,8 @@ def simulate():
 	# to store distances and migration rates for simulations.
 	Distance_Dic = Distance_Mig(x_mat, y_mat, max_mig_rate)
 
+	K_dict = varyK(Distance_Dic, max_K, min_K, x_mat, y_mat)
+
 	print os.getpid(), (max_mig_rate, bot)
 
 	# Open csv to which data will be written
@@ -31,6 +33,7 @@ def simulate():
 		writer.writerow(["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full"])
 
 		# Loop for 'sims' iterations
+		print_progress(0, sims, prefix='', suffix='', decimals=1, bar_length=100)
 		for s in range(sims):
 
 			sim = {}
@@ -49,7 +52,7 @@ def simulate():
 			locus_B = (['B'] * int(N * pB) ) + (['b'] * int(round(N * qB)))
 
 			# Run 'cline' function.
-			cline(locus_A,locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, K, r, max_mig_rate, pop_counter, Distance_Dic) # Run cline function
+			cline(locus_A,locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic) # Run cline function
 
 			# Append results from 'cline' function 'sim' dictionary as new entry.
 			# Keys correspond to interation.
@@ -59,6 +62,8 @@ def simulate():
 
 			# Ensure sim is deleted to avoid overconsumption of RAM
 			del sim
+
+			print_progress(s + 1, sims, prefix='', suffix='', decimals=1, bar_length=100)
 
 if __name__ == '__main__':
 	simulate()
