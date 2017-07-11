@@ -13,17 +13,17 @@ N =  10 # Initial population size (i.e. starting size of first initialized popul
 
 sims = 15 # Number of simulations
 
-max_mig_rate = float(0.5) # Maximum migration rate. Declines linearly with distance. See 'migration_rate' function in Functions.py
+max_mig_rate = float(sys.argv[1]) # Maximum migration rate. Declines linearly with distance. See 'migration_rate' function in Functions.py
 
 # Carrying capacity
 max_K = 1000
-min_K = 1000 
+min_K = 100
 
 x_mat = 1 # Number of columns in matrix (i.e. landscape)
 
 y_mat = 10 # Number of rows in matrix (i.e. landscape)
 
-bot = float(0.5) # Proportion of alleles sampled upon creation of new populations (i.e. bottleneck proportion)
+bot = float(sys.argv[1]) # Proportion of alleles sampled upon creation of new populations (i.e. bottleneck proportion)
 
 max_p_create = float(1) # Maximum probability of creating a new population. Decreases with population size. See 'prob_create' function in Functions.py
 
