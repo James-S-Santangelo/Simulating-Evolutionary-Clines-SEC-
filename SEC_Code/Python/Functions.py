@@ -9,12 +9,8 @@ from datetime import datetime
 import os
 import itertools
 import math
-# import numpy as np
-# import pandas as pd
-from numpy.random import choice
-import glob
+import bisect
 import sys as sys
-from Parameters import x_mat, y_mat, max_mig_rate
 
 def sample_population_A(locus_A, N):
 	'''Samples N alleles from locus_A allele list.
@@ -106,6 +102,22 @@ def Distance_Mig(x_mat, y_mat, max_mig_rate):
 	migration_rate(Distance_Dic, max_mig_rate)
 	return Distance_Dic
 
+def cdf(weights):
+	total = sum(weights)
+	result = []
+	cumsum = 0
+	for w in weights:
+		cumsum += w
+		result.append(cumsum / total)
+	return result
+
+def choice(population, weights):
+	assert len(population) == len(weights)
+	cdf_vals = cdf(weights)
+	x = random.random()
+	idx = bisect.bisect(cdf_vals, x)
+	return population[idx]
+
 def sample_alleles_A(pA1, Akey, Avalue, alleles, r, K):
 	'''Sample alleles at locus A from infinite allele pool.
 
@@ -128,11 +140,10 @@ def sample_alleles_A(pA1, Akey, Avalue, alleles, r, K):
 	Returns:
 	list containing sampled 'A' alleles
 	'''
-	list_of_candidates = ['A','a'] # Possible alleles to sample
+	population = 'Aa' # Possible alleles to sample
 	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K) # Number to sample. Corresponds to next generation's size.
-	probability_distribution= [pA1, (1 - pA1)] # Sampling probabilities. Returned by 'alleles_next_gen'
-	draw = choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution) # Sample alleles
-	return list(draw) # Return list of newly sampled alleles. Becomes allele pool in the next generation
+	weights = [pA1, (1 - pA1)] # Sampling probabilities. Returned by 'alleles_next_gen'
+	return [choice(population, weights) for i in range(number_of_items_to_pick[0])] # Return list of newly sampled alleles. Becomes allele pool in the next generation
 
 def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K):
 	'''Sample alleles at locus B from infinite allele pool.
@@ -156,11 +167,10 @@ def sample_alleles_B(pB1, Akey, Avalue, alleles, r, K):
 	Returns:
 	list containing sampled 'B' alleles
 	'''
-	list_of_candidates = ['B','b']
-	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K)
-	probability_distribution = [pB1, (1 - pB1)]
-	draw = choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution)
-	return list(draw)
+	population = 'Bb' # Possible alleles to sample
+	number_of_items_to_pick = pop_growth(r, Akey, Avalue, K) # Number to sample. Corresponds to next generation's size.
+	weights = [pB1, (1 - pB1)] # Sampling probabilities. Returned by 'alleles_next_gen'
+	return [choice(population, weights) for i in range(number_of_items_to_pick[0])] # Return list of newly sampled alleles. Becomes allele pool in the next generation
 
 def matrix_full(Matrix):
 	'''Check if Matrix has been filled with populations
@@ -342,11 +352,11 @@ def create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix,
 		#print 'There are no populations from which to sample!!'
 		pass
 	else:
-		list_of_candidates = ['1','0']
+		population = '10'
 		number_of_items_to_pick = 1
 		p_create = prob_create(K, max_p_create, Akey, Avalue)
-		probability_distribution = [p_create, (1 - p_create)]
-		create = list(choice(list_of_candidates, number_of_items_to_pick, p = probability_distribution))
+		weights = [p_create, (1 - p_create)]
+		create = [choice(population, weights) for i in range(number_of_items_to_pick)]
 		if create[0] == '1': #If a '1' is sampled, create population
 			pop_index = [(i, sublist.index(int(Akey))) for i, sublist in enumerate(Matrix) if int(Akey) in sublist][0]
 			x, y = pop_index[0], pop_index[1]
@@ -440,19 +450,18 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 	for i in range(steps):
 		pop_list = pops.keys()
 		for Akey, Avalue in alleles.items():
-			if Akey in pops.keys():
-				if 'A' and 'B' in Avalue.keys():
-					if not Avalue['A'] and not Avalue['B']:
-						#If allele lists are empty, sample from list of initial allele frequencies. Only used for first generation
-						Avalue['S'] = [N]
-						Avalue['A'] = (sample_population_A(locus_A, N))
-						Avalue['B'] = (sample_population_B(locus_B, N))
-					else:
-						#If allele lists are not empty, sample from previously sampled set of alleles.
-						Avalue['S'] = pop_growth(r, Akey, Avalue, K)
-						Avalue['A'] = sample_alleles_A(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[0], Akey, Avalue, alleles, r, K)
-						Avalue['B'] = sample_alleles_B(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[1], Akey, Avalue, alleles, r, K)
-				create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter) #Create population. Alleles will be sampled (see above). Population is currently empty list
+			if 'A' and 'B' in Avalue.keys():
+				if not Avalue['A'] and not Avalue['B']:
+					#If allele lists are empty, sample from list of initial allele frequencies. Only used for first generation
+					Avalue['S'] = [N]
+					Avalue['A'] = (sample_population_A(locus_A, N))
+					Avalue['B'] = (sample_population_B(locus_B, N))
+				else:
+					#If allele lists are not empty, sample from previously sampled set of alleles.
+					Avalue['S'] = pop_growth(r, Akey, Avalue, K)
+					Avalue['A'] = sample_alleles_A(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[0], Akey, Avalue, alleles, r, K)
+					Avalue['B'] = sample_alleles_B(alleles_next_gen(Akey, pop_list, alleles, Matrix, Distance_Dic)[1], Akey, Avalue, alleles, r, K)
+			create_population(max_p_create, K, Akey, Avalue, pops, alleles, bot, Matrix, pop_counter) #Create population. Alleles will be sampled (see above). Population is currently empty list
 		for Akey, Avalue in alleles.items():
 			#Calculate allele and phenotype frequencies for every population, including newly created ones.
 			pA = allele_freq(Avalue['A'])
