@@ -11,6 +11,7 @@ import itertools
 import math
 import bisect
 import sys as sys
+from Parameters import x_mat, y_mat, max_mig_rate
 
 def sample_population_A(locus_A, N):
 	'''Samples N alleles from locus_A allele list.

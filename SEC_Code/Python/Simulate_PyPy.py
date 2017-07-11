@@ -1,6 +1,6 @@
 #!/usr/local/bin/python2.7
 
-from Functions import *
+from Functions_PyPy import *
 from Parameters import *
 
 def simulate():
