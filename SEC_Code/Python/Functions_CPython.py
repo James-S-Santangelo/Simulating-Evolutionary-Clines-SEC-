@@ -88,7 +88,7 @@ def migration_rate(Distance_Dic, max_mig_rate):
 	m = (max_mig_rate - 0)/(max_dis[0] - 0) # Slope. Assumes close to no migration at max distance. Relized migration at max distance may be slightly greater than 0 due to rounding.
 	for Dkey, Dvalue in Distance_Dic.items():
 		Mig_prop = max_mig_rate - m*Dvalue[0]
-		Distance_Dic[Dkey].append(round(Mig_prop, 3)) # Append migration rate to 'Distance_Dic' dictionary
+		Distance_Dic[Dkey].append(round(Mig_prop, 4)) # Append migration rate to 'Distance_Dic' dictionary
 
 # Function to calculate distances between all pairwise combinations of cells in matrix. Also calls
 # the migration rate between populations and appends this to the distance dictionary.
