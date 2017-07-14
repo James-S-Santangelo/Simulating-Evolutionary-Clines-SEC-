@@ -21,7 +21,7 @@ SEC_Code/Python/ contains two versions of the simulations: one to be run using t
 The Python code in SEC_Code/Python/ contains multiple scripts: (1) Parameters.py, (2) Functions_CPython.py, (3) Simulate_CPython.py, and (4) Merge_csv.py. **Only Simulate.py is required to actually run the simulation as it will import the other scripts automatically**.
 
 1. Open Parameters.py and set parameter values. Some of these take arguments from the command line (e.g. sys.argv), although this is not necessary and can be modified if desired.
-2. Run the simulate function by typing `python Simulate.py` into the command line. **Note the simulation use Python 2.7**
+2. Run the simulate function by typing `python Simulate.py x1 y1` into the command line, where x1 and y1 refer to arguments passed at the command line corresponding to sys.argv[1] and sys.argv[2] in Parameters.py. **Note the simulation use Python 2.7**
 3. See dataset exported to specified path (set in Parameters.py).
 
 While the above approach is useful for generating small amounts of data and testing code functionality, it does not provide sufficient data to address the above questions. For this we need to run multiple iterations (e.g. 1000 simulations) of varying parameter combinations. This is a computationally intensive process that almost certainly requires the use of high performance computing cluster. To do this, I recommend the following approach be taken. Note this assumes you have access to a cluster.
