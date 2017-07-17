@@ -7,7 +7,7 @@ library("data.table", lib="~/Rpackages")
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 #Load dataset varying migration rate and add distance column
-colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "Acyan", "Mat.full")
+colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "Acyan", "Mat.full", "Pop_size")
 dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', select = colsToKeep, header = T)
 dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
