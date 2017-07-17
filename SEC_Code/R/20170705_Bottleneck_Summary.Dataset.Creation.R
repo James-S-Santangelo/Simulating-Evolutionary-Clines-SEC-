@@ -12,6 +12,17 @@ dat_Bot_Vary <- fread('20170704_Merged_BotOnly.csv', select = colsToKeep, header
 dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 dat_Bot_Vary$Cyan  <- 1 - dat_Bot_Vary$Acyan
 
+#Generate dataset showing Ne for every population, grouped by bottleneck strength
+dat_bot_Ne <- dat_Bot_Vary %>%
+  mutate(recip = 1 / Pop_size) %>%
+  group_by(Population, bot, Distance) %>%
+  summarise(sumRecip = sum(recip), 
+            Ne = max(Generation) / sumRecip)
+
+#Write Ne dataset to csv
+today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+fwrite(dat_bot_Ne, file = paste(today, "Ne_Bot.csv", sep = "_"), sep = ",", col.names = TRUE)
+
 #Run model testing for change in HCN frequency with distance across matrix. 
 #Performed separately for every simulation and generation, begining with the generation the matrix fill.
 dat_Botlm_sum <- dat_Bot_Vary %>%
@@ -31,7 +42,6 @@ FitBotSimCoef <- FitBotSimCoef %>%
   select(estimate, p.value)
 
 #Write dataset with all models to csv
-today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 fwrite(FitBotSimCoef, file = paste(today, "FitBotSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 #Get mean slope and proportion of significantly positive and negative slopes

@@ -12,6 +12,17 @@ dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', select = colsToKeep, header
 dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
 
+#Generate dataset showing Ne for every population, grouped by bottleneck strength
+dat_mig_Ne <- dat_Mig_Vary %>%
+  mutate(recip = 1 / Pop_size) %>%
+  group_by(Population, Mig_rate, Distance) %>%
+  summarise(sumRecip = sum(recip), 
+            Ne = max(Generation) / sumRecip)
+
+#Write Ne dataset to csv
+today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+fwrite(dat_mig_Ne, file = paste(today, "Ne_Mig.csv", sep = "_"), sep = ",", col.names = TRUE)
+
 #Run model testing for change in HCN frequency with distance across matrix. 
 #Performed separately for every simulation and generation, begining with the generation the matrix full.
 dat_Miglm_sum <- dat_Mig_Vary %>%
@@ -31,7 +42,6 @@ FitMigSimCoef <- FitMigSimCoef %>%
   select(estimate, p.value)
 
 #Write dataset with all models to csv
-today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 fwrite(FitMigSimCoef, file = paste(today, "FitMigSimCoef.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 #Get mean slope and proportion of significantly positive and negative slopes
