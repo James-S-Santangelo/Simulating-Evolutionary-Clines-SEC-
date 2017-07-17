@@ -464,7 +464,7 @@ def phenotype(pA, pB):
 # Cline function. Every generation, alleles are exchanged among populations. Populations follow
 # logistic population growth. Ever generation, every population has some probability (p) of generating a new population, with alleles
 # sampled from the population that created it.
-def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic):
+def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic, min_K):
 	'''Generates cline based on number of generations.
 
 	Loops over all populations for desired number of generations (i.e. steps).
@@ -516,7 +516,7 @@ def cline(locus_A, locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, 
 			pA = allele_freq(Avalue['A'])
 			pB = allele_freq(Avalue['B'])
 			pop_index = [(j, sublist.index(int(Akey))) for j, sublist in enumerate(Matrix) if int(Akey) in sublist][0]
-			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, pA, pB, phenotype(pA, pB), max_mig_rate, K_dict[str(pop_index)][1], r, max_p_create, bot, matrix_full(Matrix)])
+			pops[Akey].append([pop_index[0], pop_index[1], Avalue['S'][0], i, round(pA, 3), round(pB, 3), round(phenotype(pA, pB), 3), max_mig_rate, K_dict[str(pop_index)][1], round(r, 3), max_p_create, bot, matrix_full(Matrix), max_K, min_K])
 	return pops
 
 def write_to_csv(writer, sim):
@@ -533,5 +533,5 @@ def write_to_csv(writer, sim):
 	for i in sim.keys():
 		for j, x in sim[i].items():
 			for z in x:
-				writer.writerow([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12]])
+				writer.writerow([i, z[0], z[1], j, z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12], z[13], z[14]])
 

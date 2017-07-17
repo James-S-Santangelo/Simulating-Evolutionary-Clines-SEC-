@@ -30,7 +30,7 @@ def simulate():
 	datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 	with open(datestring + "_SEC_Drift.Migration_(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
 		writer = csv.writer(f)
-		writer.writerow(["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full"])
+		writer.writerow(["Sim","x","y","Population","Pop_size","Generation","pA","pB","Acyan", "Mig_rate", "K", "r", "max_p_create", "bot", "Mat.full", "max_K", "min_K"])
 
 		# Loop for 'sims' iterations
 		print_progress(0, sims, prefix='', suffix='', decimals=1, bar_length=100)
@@ -52,7 +52,7 @@ def simulate():
 			locus_B = (['B'] * int(N * pB) ) + (['b'] * int(round(N * qB)))
 
 			# Run 'cline' function.
-			cline(locus_A,locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic) # Run cline function
+			cline(locus_A,locus_B, steps, N, max_p_create, pops, alleles, bot, Matrix, max_K, K_dict, r, max_mig_rate, pop_counter, Distance_Dic, min_K) # Run cline function
 
 			# Append results from 'cline' function 'sim' dictionary as new entry.
 			# Keys correspond to interation.
