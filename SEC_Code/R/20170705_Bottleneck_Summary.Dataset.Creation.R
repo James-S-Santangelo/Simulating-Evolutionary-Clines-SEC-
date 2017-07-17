@@ -7,7 +7,7 @@ library("data.table", lib="~/Rpackages")
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 # Load dataset that varies the bottleneck proportion and add distance column
-colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Acyan", "Mat.full", "Pop_size")
+colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Acyan", "Mat.full", "Pop_size", "Population")
 dat_Bot_Vary <- fread('20170704_Merged_BotOnly.csv', select = colsToKeep, header = T)
 dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 dat_Bot_Vary$Cyan  <- 1 - dat_Bot_Vary$Acyan
