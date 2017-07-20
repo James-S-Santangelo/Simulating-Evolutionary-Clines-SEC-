@@ -11,13 +11,15 @@ colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Acyan", "Mat.full", "Pop_s
 dat_Bot_Vary <- fread('20170704_Merged_BotOnly.csv', select = colsToKeep, header = T)
 dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 dat_Bot_Vary$Cyan  <- 1 - dat_Bot_Vary$Acyan
+dat_Bot_Vary$Recip = 1 / dat_Bot_Vary$Pop_size
 
 #Generate dataset showing Ne for every population, grouped by bottleneck strength
 dat_bot_Ne <- dat_Bot_Vary %>%
-  mutate(recip = 1 / Pop_size) %>%
-  group_by(Population, bot, Distance) %>%
-  summarise(sumRecip = sum(recip), 
-            Ne = max(Generation) / sumRecip)
+  group_by(Sim, Population, bot) %>%
+  summarise(sumRecip = sum(Recip), 
+            Generations = length(unique(Generation)),
+            Ne = Generations / sumRecip)
+dat_bot_Ne <- summarySE(dat_bot_Ne, groupvars = c("Population", "bot"), measurevar = "Ne")
 
 #Write Ne dataset to csv
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))

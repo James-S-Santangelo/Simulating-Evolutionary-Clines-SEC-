@@ -11,13 +11,15 @@ colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "Acyan", "Mat.full", "
 dat_Mig_Vary <- fread('20170704_Merged_MigOnly.csv', select = colsToKeep, header = T)
 dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 dat_Mig_Vary$Cyan  <- 1 - dat_Mig_Vary$Acyan
+dat_Mig_Vary$Recip = 1 / dat_Mig_Vary$Pop_size
 
 #Generate dataset showing Ne for every population, grouped by bottleneck strength
 dat_mig_Ne <- dat_Mig_Vary %>%
-  mutate(recip = 1 / Pop_size) %>%
-  group_by(Population, Mig_rate, Distance) %>%
-  summarise(sumRecip = sum(recip), 
-            Ne = max(Generation) / sumRecip)
+  group_by(Sim, Population, Mig_rate) %>%
+  summarise(sumRecip = sum(Recip), 
+            Generations = length(unique(Generation)),
+            Ne = Generations / sumRecip)
+dat_mig_Ne <- summarySE(dat_mig_Ne, groupvars = c("Population", "Mig_rate"), measurevar = "Ne")
 
 #Write Ne dataset to csv
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
