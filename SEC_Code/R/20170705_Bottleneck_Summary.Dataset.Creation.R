@@ -2,6 +2,7 @@
 library(dplyr)
 library(broom)
 library("data.table", lib="~/Rpackages")
+library(Rmisc, lib = "~/Rpackages")
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
