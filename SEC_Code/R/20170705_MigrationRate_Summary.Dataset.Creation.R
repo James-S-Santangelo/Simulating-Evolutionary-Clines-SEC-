@@ -1,8 +1,8 @@
 #Load required packages
-library(dplyr)
 library(broom)
 library("data.table", lib="~/Rpackages")
 library(Rmisc, lib = "~/Rpackages")
+library(dplyr)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
@@ -16,11 +16,11 @@ dat_Mig_Vary$Recip = 1 / dat_Mig_Vary$Pop_size
 
 #Generate dataset showing Ne for every population, grouped by bottleneck strength
 dat_mig_Ne <- dat_Mig_Vary %>%
-  group_by(Sim, Population, Mig_rate) %>%
+  group_by(Sim, Population, Mig_rate, Distance) %>%
   summarise(sumRecip = sum(Recip), 
             Generations = length(unique(Generation)),
             Ne = Generations / sumRecip)
-dat_mig_Ne <- summarySE(dat_mig_Ne, groupvars = c("Population", "Mig_rate"), measurevar = "Ne")
+dat_mig_Ne <- summarySE(dat_mig_Ne, groupvars = c("Population", "Mig_rate", "Distance"), measurevar = "Ne")
 
 #Write Ne dataset to csv
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
