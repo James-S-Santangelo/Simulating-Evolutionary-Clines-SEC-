@@ -81,21 +81,14 @@ def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_
 						round(phen, 3), max_p_create, K, round(r, 3),
 						bot, max_mig_rate, mat_full, size, min_K, max_K])
 
-			if step == 0:
+			K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
+			Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
 
-				K = max_K
-				pass
+			pA1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[0]
+			pB1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[1]
 
-			else:
-
-				K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
-				Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
-
-				pA1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[0]
-				pB1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[1]
-
-				Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, r, 'Aa')
-				Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, r, 'Bb')
+			Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, r, 'Aa')
+			Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, r, 'Bb')
 
 			Matrix[i][j].create_population(rows, cols, Matrix, max_p_create, bot, K, r)
 
