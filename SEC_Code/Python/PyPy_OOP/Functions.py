@@ -70,27 +70,8 @@ def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_
 
             i, j = pop[0], pop[1]
 
-            if step == 0:
-
-                K = max_K
-                pass
-
-            else:
-
-                K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
-#                 print Matrix[i][j].population.size
-                Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
-
-                pA1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[0]
-                pB1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[1]
-
-                Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, r, 'Aa')
-                Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, r, 'Bb')
-
-            Matrix[i][j].create_population(rows, cols, Matrix, max_p_create, bot, K, r)
-
-
-            size = Matrix[i][j].population.size
+            K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
+#                       size = Matrix[i][j].population.size
             pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
             pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
             phen = Matrix[i][j].population.phenotype(pA, pB)
@@ -98,6 +79,16 @@ def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_
             results.append([s, i, j, step, round(pA, 3), round(pB, 3),
                             round(phen, 3), max_p_create, K, round(r, 3),
                             bot, max_mig_rate, mat_full, size, min_K, max_K])
+
+            Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
+
+            pA1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[0]
+            pB1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[1]
+
+            Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, r, 'Aa')
+            Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, r, 'Bb')
+
+            Matrix[i][j].create_population(rows, cols, Matrix, max_p_create, bot, K, r)
 
 
 def write_to_csv(writer, results):
