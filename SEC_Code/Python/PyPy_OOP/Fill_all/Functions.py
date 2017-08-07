@@ -77,8 +77,7 @@ def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_
 			phen = Matrix[i][j].population.phenotype(pA, pB)
 
 			results.append([s, i, j, step, round(pA, 3), round(pB, 3),
-							round(phen, 3), max_p_create, K, round(r, 3),
-							bot, max_mig_rate, mat_full, size, min_K, max_K])
+							round(phen, 3), K, max_mig_rate, size, min_K, max_K])
 
 			Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
 
@@ -95,4 +94,4 @@ def write_to_csv(writer, results):
 
 	for z in results:
 
-		writer.writerow([z[0], z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12], z[13], z[14], z[15]])
+		writer.writerow([z[0], z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11])
