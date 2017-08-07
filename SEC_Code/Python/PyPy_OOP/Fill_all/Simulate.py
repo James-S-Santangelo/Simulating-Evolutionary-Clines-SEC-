@@ -29,7 +29,7 @@ def simulate():
 					Matrix[i][j].pop = True
 					K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
 					locus_A = ( [ 'A' ] * int( K * pA ) ) + ( [ 'a' ] * int( round( K * qA ) ) )  # Re-initialize initial allele lists.
-					locus_B = ( [ 'B' ] * int( K * pB ) ) + ( [ 'b' ] * int( round( K * qB ) ) ) 
+					locus_B = ( [ 'B' ] * int( K * pB ) ) + ( [ 'b' ] * int( round( K * qB ) ) )
 					Matrix[i][j].population = Population(K, locus_A, locus_B)
 
 			cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_K, max_K, r)
