@@ -19,9 +19,9 @@ max_mig_rate = float(0.5) # Maximum migration rate. Declines linearly with dista
 max_K = 1000
 min_K = 10
 
-rows = 1 # Number of columns in matrix (i.e. landscape)
+x_mat = 1 # Number of columns in matrix (i.e. landscape)
 
-cols = 50 # Number of rows in matrix (i.e. landscape)
+y_mat = 50 # Number of rows in matrix (i.e. landscape)
 
 bot = float(0.5) # Proportion of alleles sampled upon creation of new populations (i.e. bottleneck proportion)
 
