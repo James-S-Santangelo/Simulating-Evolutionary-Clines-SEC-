@@ -14,7 +14,7 @@ def simulate():
 	os.chdir(export_path)
 	datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-	with open(datestring + "_SEC_Drift.Migration_(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
+	with open(datestring + "_SEC_Kvary_Migration_(m%.4f).csv" % (max_mig_rate), "wb") as f:
 		writer = csv.writer(f)
 		writer.writerow(["Sim","x","y","Generation","pA","pB","Cyan","K", "Mig_rate", "Pop_size", "min_K", "max_K"])
 
