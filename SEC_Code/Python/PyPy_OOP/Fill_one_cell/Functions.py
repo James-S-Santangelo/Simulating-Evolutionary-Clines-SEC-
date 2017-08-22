@@ -3,9 +3,12 @@ import random
 import bisect
 
 
-def matrix_full(Matrix, rows, cols):
+def matrix_full(Matrix):
 
-    pop = [Matrix[i][j].pop for i in range(rows) for j in range(cols)]
+    num_rows = len(Matrix)
+    num_cols = len(Matrix[0])
+
+    pop = [Matrix[i][j].pop for i in range(num_rows) for j in range(num_cols)]
 
     if all(pop):
         return 1
@@ -46,12 +49,12 @@ def cdf(weights):
     return result
 
 
-def choice(population, weights):
-    assert len(population) == len(weights)
+def choice(possibilities, weights):
+    assert len(possibilities) == len(weights)
     cdf_vals = cdf(weights)
     x = random.random()
     idx = bisect.bisect(cdf_vals, x)
-    return population[idx]
+    return possibilities[idx]
 
 
 def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_K, max_K, r, max_mig_rate):
@@ -59,8 +62,8 @@ def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_
     for step in range(steps):
 
         pop_list = [(i, j) for j in range(cols) for i in range(rows) if Matrix[i][j].pop]
-        mat_full = matrix_full(Matrix, rows, cols)
 
+        mat_full = matrix_full(Matrix, rows, cols)
         for pop in pop_list:
 
             i, j = pop[0], pop[1]

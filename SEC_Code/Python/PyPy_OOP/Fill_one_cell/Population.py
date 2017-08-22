@@ -1,5 +1,4 @@
 import math
-import random
 
 import Functions
 
@@ -13,9 +12,9 @@ class Population(object):
 
     def pop_growth(self, size, K, r):
         K = float(K)
-        self.size = self.size * K / (self.size + (K - self.size) * math.exp(-r))
-        self.size = int(math.ceil(self.size))
-        return self.size
+        new_size = self.size * K / (self.size + (K - self.size) * math.exp(-r))
+        new_size = int(math.ceil(new_size))
+        return new_size
 
     def phenotype(self, locus_A, locus_B):
         qA = 1 - self.allele_freq(self.locus_A)
@@ -31,14 +30,15 @@ class Population(object):
             if i == 'A' or i == 'B':
                 sum += 1
         p = sum / float(len(locus))
-        return p
+        return round(p, 4)
 
-    @staticmethod
-    def sample_population(locus, N):
-        new_locus = [random.choice(locus) for _ in range(N)]
+    # @staticmethod
+    # def sample_population(locus, N):
+    #     new_locus = [random.choice(locus) for _ in range(N)]
+    #     return new_locus
+
+    def sample_alleles(self, allele_freq, possibilities):
+        num_of_items = self.size
+        weights = [allele_freq, (1 - allele_freq)]
+        new_locus = [Functions.choice(possibilities, weights) for i in range(num_of_items)]
         return new_locus
-
-    def sample_alleles(self, allele, r, possibilities):
-        number_of_items_to_pick = self.size
-        weights = [allele, (1 - allele)]
-        return [Functions.choice(possibilities, weights) for i in range(number_of_items_to_pick)]
