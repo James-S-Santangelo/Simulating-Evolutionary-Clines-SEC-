@@ -57,37 +57,53 @@ def choice(possibilities, weights):
     return possibilities[idx]
 
 
-def cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_K, max_K, r, max_mig_rate):
+def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob, bot_prop, min_K, max_K, r, max_mig_rate):
 
     for step in range(steps):
 
-        pop_list = [(i, j) for j in range(cols) for i in range(rows) if Matrix[i][j].pop]
+        pop_list = [(i, j) for j in range(num_cols) for i in range(num_rows) if Matrix[i][j].pop]
 
-        mat_full = matrix_full(Matrix, rows, cols)
+        mat_full = matrix_full(Matrix)
+
         for pop in pop_list:
 
             i, j = pop[0], pop[1]
 
-            size = Matrix[i][j].population.size
-            pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
-            pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
-            phen = Matrix[i][j].population.phenotype(pA, pB)
-            K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
+            create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, r, mat_full, s, step, max_create_prob)
 
-            results.append([s, i, j, step, round(pA, 3), round(pB, 3),
-                            round(phen, 3), max_p_create, K, round(r, 3),
-                            bot, max_mig_rate, mat_full, size, min_K, max_K])
+            K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
 
-            K = Matrix[i][j].Distance_calc(0, 0, rows, cols, max_mig_rate, min_K, max_K)[1]
             Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
 
-            pA1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[0]
-            pB1 = Matrix[i][j].alleles_next_gen(rows, cols, pop_list, max_mig_rate, min_K, max_K)[1]
+            weighting_factor_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[3]
+            migration_weighting_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
+            allele_weighted_A_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
+            allele_weighted_B_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[2]
 
-            Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, r, 'Aa')
-            Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, r, 'Bb')
+            migration_weighted = Matrix[i][j].weighting(migration_weighting_list, weighting_factor_list)
+            allele_weighted_A = Matrix[i][j].weighting(allele_weighted_A_list, weighting_factor_list)
+            allele_weighted_B = Matrix[i][j].weighting(allele_weighted_B_list, weighting_factor_list)
 
-            Matrix[i][j].create_population(rows, cols, Matrix, max_p_create, bot, K, r)
+            pA1 = Matrix[i][j].freq_after_migration(migration_weighted, allele_weighted_A, Matrix[i][j].population.locus_A)
+            pB1 = Matrix[i][j].freq_after_migration(migration_weighted, allele_weighted_B, Matrix[i][j].population.locus_B)
+
+            Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, 'Aa')
+            Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, 'Bb')
+
+            Matrix[i][j].create_population(num_rows, num_cols, Matrix, max_create_prob, bot_prop, K)
+
+
+def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, r, mat_full, s, step, max_create_prob):
+
+    size = Matrix[i][j].population.size
+    pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
+    pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
+    phen = Matrix[i][j].population.phenotype(pA, pB)
+    K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
+
+    results.append([s, i, j, step, round(pA, 3), round(pB, 3),
+                    round(phen, 3), max_create_prob, K, round(r, 3),
+                    bot_prop, max_mig_rate, mat_full, size, min_K, max_K])
 
 
 def write_to_csv(writer, results):

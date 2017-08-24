@@ -3,35 +3,35 @@ from datetime import datetime
 import csv
 import math
 
-import Cell
+from Cell import Cell
+from Population import Population
 import Functions
-import Population
 
 # Initial allele frequncies
-pA = float(0.5)
-pB = float(0.5)
+pA = 0.5
+pB = 0.5
 qA = 1 - pA
 qB = 1 - pB
 # Number of generations
 steps = 50
 # Size of starting population
-N = 100
+N = 1000
 # Number of simulations
-sims = 5
+sims = 1
 # Maximum migration rate.
-max_mig_rate = float(0.5)
+max_mig_rate = 0.05
 # Carrying capacity
 max_K = 1000
-min_K = 10
+min_K = 1000
 # Number of rows and columns to be used in Matrix
-rows = 1
-cols = 50
+num_rows = 1
+num_cols = 5
 # Proportion of alleles sampled upon creation of new populations
-bot = float(0.5)
+bot_prop = 1.0
 # Maximum probability of creating a new population.
-max_p_create = float(0.1)
+max_p_create = 1
 # Natural rate of increase.
-r = float(math.log(1.5))
+r = math.log(1.5)
 # Path where final dataset will be exported
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
 
@@ -58,11 +58,11 @@ def simulate():
             locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))
             locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
 
-            Matrix = Cell.create_matrix(cols, rows)
+            Matrix = Cell.initialize_matrix(num_cols, num_rows)
             Matrix[0][0].pop = True
-            Matrix[0][0].population = Population.Population(N, locus_A, locus_B)
+            Matrix[0][0].population = Population(N, locus_A, locus_B)
 
-            Functions.cline(s, results, rows, cols, steps, pA, pB, Matrix, max_p_create, bot, min_K, max_K, r, max_mig_rate)
+            Functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
 
             Functions.write_to_csv(writer, results)
 

@@ -26,7 +26,7 @@ class TestPopulation(unittest.TestCase):
         self.assertListEqual(self.pop.locus_A, ['A', 'A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'])
         self.assertListEqual(self.pop.locus_B, ['B', 'B', 'B', 'B', 'B', 'b', 'b', 'b', 'b', 'b'])
 
-    @parameterized.expand([("100", 15), ("10", 10), ("5", 8)])
+    @parameterized.expand([("100", 15), ("10", 10), ("5", 7)])
     def test_pop_growth(self, K, expected):
         self.assertEqual(self.pop.pop_growth(self.pop.size, K, math.log(1.5)), expected)
 
@@ -56,6 +56,17 @@ class TestPopulation(unittest.TestCase):
     def test_sample_alleles(self):
         self.assertListEqual(self.pop.sample_alleles(0, 'Aa'), (['A'] * 0) + (['a'] * 10))
         self.assertListEqual(self.pop.sample_alleles(1, 'Aa'), (['A'] * 10) + (['a'] * 0))
+
+    @patch('random.choice')
+    def test_sample_population(self, mock_rand_choice):
+
+        expected = ['A', 'A', 'A', 'a', 'a', 'a']
+        mock_rand_choice.side_effect = ['A', 'A', 'A', 'a', 'a', 'a']
+
+        N = 6
+        actual = self.pop.sample_population(self.pop.locus_A, N)
+        self.assertEqual(actual, expected)
+        mock_rand_choice.assert_called_with(self.pop.locus_A)
 
     @patch('Functions.choice')
     def test_sample_alleles_mocked(self, mock_choice):

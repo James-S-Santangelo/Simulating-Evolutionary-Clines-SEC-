@@ -85,3 +85,6 @@ class TestPopulation(unittest.TestCase):
         expected = 'A'
 
         self.assertNotEqual(Functions.choice(possibilities, weights), expected)
+
+if __name__ == '__main__':
+    unittest.main()
