@@ -73,19 +73,10 @@ def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob
 
             K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
 
-            Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(Matrix[i][j].population.size, K, r)
+            Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K, r)
 
-            weighting_factor_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[3]
-            migration_weighting_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
-            allele_weighted_A_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
-            allele_weighted_B_list = Matrix[i][j].source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[2]
-
-            migration_weighted = Matrix[i][j].weighting(migration_weighting_list, weighting_factor_list)
-            allele_weighted_A = Matrix[i][j].weighting(allele_weighted_A_list, weighting_factor_list)
-            allele_weighted_B = Matrix[i][j].weighting(allele_weighted_B_list, weighting_factor_list)
-
-            pA1 = Matrix[i][j].freq_after_migration(migration_weighted, allele_weighted_A, Matrix[i][j].population.locus_A)
-            pB1 = Matrix[i][j].freq_after_migration(migration_weighted, allele_weighted_B, Matrix[i][j].population.locus_B)
+            pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
+            pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
 
             Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, 'Aa')
             Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, 'Bb')

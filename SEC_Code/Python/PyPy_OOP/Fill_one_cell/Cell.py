@@ -303,3 +303,31 @@ class Cell(object):
             p_1 = 1.0
 
         return round(p_1, 4)
+
+    def alleles_next_gen(self, pop_list, Matrix, num_rows, num_cols, max_mig_rate):
+        """Calculates frequency of allele in next generation following migration and selection
+
+        Args:
+            pop_list (:obj:'list' of :obj:'tuple'): Tuples with row and columns indices of all landscape
+            cells with populations.
+            Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position
+            num_rows (int): Number of rows in landscape matrix.
+            num_cols (int): Number of columns in landscape matrix
+            max_mig_rate (float): Maximum possible migration between two populations
+
+        Returns:
+            pA1 and pB1 (float): Frequency of A and B allele following migration and selection
+        """
+        weighting_factor_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[3]
+        migration_weighting_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
+        allele_weighted_A_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
+        allele_weighted_B_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[2]
+
+        migration_weighted = self.weighting(migration_weighting_list, weighting_factor_list)
+        allele_weighted_A = self.weighting(allele_weighted_A_list, weighting_factor_list)
+        allele_weighted_B = self.weighting(allele_weighted_B_list, weighting_factor_list)
+
+        pA1 = self.freq_after_migration(migration_weighted, allele_weighted_A, self.population.locus_A)
+        pB1 = self.freq_after_migration(migration_weighted, allele_weighted_B, self.population.locus_B)
+
+        return pA1, pB1
