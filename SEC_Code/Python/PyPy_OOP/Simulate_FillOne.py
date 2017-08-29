@@ -19,17 +19,17 @@ N = 1000
 # Number of simulations
 sims = 1
 # Maximum migration rate.
-max_mig_rate = 0.05
+max_mig_rate = 0.0
 # Carrying capacity
 max_K = 1000
-min_K = 1000
+min_K = 10
 # Number of rows and columns to be used in Matrix
 num_rows = 1
 num_cols = 5
 # Proportion of alleles sampled upon creation of new populations
 bot_prop = 1.0
 # Maximum probability of creating a new population.
-max_p_create = 1
+max_p_create = 0
 # Natural rate of increase.
 r = math.log(1.5)
 # Path where final dataset will be exported
@@ -43,7 +43,7 @@ def simulate():
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "_SEC_Drift.Migration_(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
+    with open(datestring + "Drift.Migration_OneFill(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",

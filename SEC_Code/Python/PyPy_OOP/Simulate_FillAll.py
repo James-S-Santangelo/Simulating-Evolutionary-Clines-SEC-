@@ -19,17 +19,17 @@ N = 1000
 # Number of simulations
 sims = 1
 # Maximum migration rate.
-max_mig_rate = 0.05
+max_mig_rate = 0.0
 # Carrying capacity
 max_K = 1000
-min_K = 1000
+min_K = 10
 # Number of rows and columns to be used in Matrix
 num_rows = 1
 num_cols = 5
 # Proportion of alleles sampled upon creation of new populations
 bot_prop = 1.0
 # Maximum probability of creating a new population.
-max_p_create = 1
+max_p_create = 0
 # Natural rate of increase.
 r = math.log(1.5)
 # Path where final dataset will be exported
@@ -43,7 +43,7 @@ def simulate():
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "_SEC_Drift.Migration_(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
+    with open(datestring + "Drift.Migration_AllFill(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
@@ -55,12 +55,14 @@ def simulate():
 
             results = []
 
-            locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))
-            locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
-
             Matrix = Cell.initialize_matrix(num_cols, num_rows)
-            Matrix[0][0].pop = True
-            Matrix[0][0].population = Population(N, locus_A, locus_B)
+            for i in range(num_rows):
+                for j in range(num_cols):
+                    Matrix[i][j].pop = True
+                    K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
+                    locus_A = (['A'] * int(K * pA)) + (['a'] * int(round(K * qA)))
+                    locus_B = (['B'] * int(K * pB)) + (['b'] * int(round(K * qB)))
+                    Matrix[i][j].population = Population(K, locus_A, locus_B)
 
             Functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
 
