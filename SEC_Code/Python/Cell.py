@@ -139,8 +139,7 @@ class Cell(object):
             num_cols (int): Number of columns in the landscape matrix
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position.
             max_create_prob (float): Maximum probability of creating a new population.
-            bot_prop (float): Bottleneck proportion. Proportion of alleles sampled upon creation of
-            new population.
+            bot_prop (float): Bottleneck proportion. Proportion of alleles sampled upon creation of new population.
             max_pop_size (int): Maximum population size (i.e. carrying capacity).
 
             Returns:
