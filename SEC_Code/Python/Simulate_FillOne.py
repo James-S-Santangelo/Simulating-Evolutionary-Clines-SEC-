@@ -7,37 +7,57 @@ from Cell import Cell
 from Population import Population
 import Functions
 
-# Initial allele frequncies
 pA = 0.5
 pB = 0.5
 qA = 1 - pA
 qB = 1 - pB
-# Number of generations
+"""float: Frequency of 'A', 'B', 'a', and 'b' alleles"""
+
 steps = 50
-# Size of starting population
+"""int: Number of generations"""
+
 N = 1000
-# Number of simulations
+"""int: Size of starting population."""
+
 sims = 1
-# Maximum migration rate.
+"""int: Number of simulations"""
+
 max_mig_rate = 0.0
-# Carrying capacity
+"""float: Maximum migration rate between any two populations"""
+
 max_K = 1000
 min_K = 10
-# Number of rows and columns to be used in Matrix
+"""int: Maximum and minimum carying capacity of cells across the matrix"""
+
 num_rows = 1
 num_cols = 5
-# Proportion of alleles sampled upon creation of new populations
+"""int: Number of rows and number of columns in landscape matrix"""
+
 bot_prop = 1.0
-# Maximum probability of creating a new population.
+"""float: Bottleneck proportion
+
+Proportion of alleles sampled when new population is created
+"""
+
 max_p_create = 0
-# Natural rate of increase.
+"""float: Maximum probability of creating a new population"""
+
 r = math.log(1.5)
-# Path where final dataset will be exported
+"""float: Instantaneous rate of population increase"""
+
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
+"""str: Path to where dataset should be exported"""
 
 
 def simulate():
+    """Main function. Runs 'sims' iterations of 'cline' across landscape
 
+    Args:
+        None
+
+    Returns:
+        None
+    """
     print os.getpid()
 
     os.chdir(export_path)
