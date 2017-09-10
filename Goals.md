@@ -11,15 +11,7 @@
 
 ## Other goals
 
-1. Upload R script that can be used to analyze data coming from simulations.
-2. Generate figures showing example outputs of simulations.
-3. Make code object-oriented and build a GUI to visualize simulations "in real time"
-
-## Troubleshooting and necessary modifications to code
-
-As is always the case in science, some unanticipated problems arose that had to be dealt with before continuing work on the above goals. The problems and corresponding solutions are listed below.
-
-1. I ran into a problem whereby the simulations running on our server were using up all of the server's RAM (504 Gb!!). The reason is that the simulations hold all data generated as a dictionary until all iterations have completed, and only then write the data to csv. This is wildly innefficient and results in overconsumption of RAM. **Solution:** Open a csv file outside of the simulations and write each iteration to the csv as it is generated then deleted the dictionary before moving on to the next iteration. This prevents all of the data from being stored in RAM.
-2. The simulations do not currently have any kind of progress output, preventing me from knowing where they are at when running on the server. While this doesn't prevent me from effectively running the simulations, it do prevent me from efficiently planning my work flow. I would also be nice if I could give my colleagues and lab mates a sense of when my processes will be finished to help them plan their work as well. **Solution:** Using [this function from Github user Aubricus](https://gist.github.com/aubricus/f91fb55dc6ba5557fbab06119420dd6a), I have inserted a progress bar to the command line under the PID and parameter values for the current simulation.
-
-
+1. ~~Upload R script that can be used to analyze data coming from simulations.~~
+2. ~~Make code object-oriented~~
+3. Upload visualization of simulations
+4. Generate figures showing example outputs of simulations.
