@@ -6,6 +6,6 @@ install:
   - pip install -r requirements.txt
   - pip install nose
 before_script:
-  export PYTHONPATH=$PYTHONPATH:$(pwd)
+  echo $PYTHONPATH
 script:
   nosetests SEC_Code/Python/Tests/
