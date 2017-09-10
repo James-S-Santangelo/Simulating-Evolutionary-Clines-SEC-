@@ -6,6 +6,6 @@ install:
   - pip install -r requirements.txt
   - pip install nose
 before_script:
-  - export PYTHONPATH=$PYTHONPATH:/Users/jamessantangelo/Documents/Academia/Doctorate_PhD/Projects/SEC_Simulating.evolutionary.clines/SEC_Git/SEC_Code/Python/
+  - sh env.sh
 script:
   nosetests SEC_Code/Python/Tests/
