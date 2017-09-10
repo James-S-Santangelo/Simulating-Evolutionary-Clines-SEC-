@@ -2,7 +2,7 @@ import unittest
 import math
 from mock import patch, Mock
 
-from Cell import Cell
+from .SEC_Code.Cell import Cell
 from Population import Population
 
 
