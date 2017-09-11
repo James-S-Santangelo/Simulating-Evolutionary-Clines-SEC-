@@ -1,8 +1,8 @@
 import math
 import random
 
-import Population
-import Functions
+from Simulations import Population
+from Simulations import Functions
 
 
 class Cell(object):

@@ -1,7 +1,7 @@
 import math
 import random
 
-import Functions
+from Simulations import Functions
 
 
 class Population(object):

@@ -3,9 +3,9 @@ from datetime import datetime
 import csv
 import math
 
-from Cell import Cell
-from Population import Population
-import Functions
+from Simulations.Cell import Cell
+from Simulations.Population import Population
+from Simulations import Functions
 
 pA = 0.5
 pB = 0.5
