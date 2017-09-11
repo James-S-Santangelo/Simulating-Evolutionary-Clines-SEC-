@@ -2,7 +2,7 @@ import unittest
 from parameterized import parameterized
 from mock import patch
 
-import Functions
+fro, Simulations import Functions
 
 
 class TestFunctions(unittest.TestCase):

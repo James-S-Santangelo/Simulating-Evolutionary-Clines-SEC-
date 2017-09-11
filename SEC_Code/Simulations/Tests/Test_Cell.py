@@ -2,8 +2,8 @@ import unittest
 import math
 from mock import patch, Mock
 
-from Cell import Cell
-from Population import Population
+from Simulations.Cell import Cell
+from Simulations.Population import Population
 
 
 class TestCell(unittest.TestCase):

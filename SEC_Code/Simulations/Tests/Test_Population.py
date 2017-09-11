@@ -3,7 +3,7 @@ from parameterized import parameterized
 from mock import patch
 import math
 
-import Population
+from Simulations import Population
 
 
 class TestPopulation(unittest.TestCase):
