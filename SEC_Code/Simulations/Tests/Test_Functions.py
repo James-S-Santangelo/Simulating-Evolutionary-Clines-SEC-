@@ -2,13 +2,13 @@ import unittest
 from parameterized import parameterized
 from mock import patch
 
-fro, Simulations import Functions
+from Simulations import Functions
 
 
 class TestFunctions(unittest.TestCase):
     """Unit tests for Functions.py"""
 
-    @patch('Cell.Cell')
+    @patch('Simulations.Cell.Cell')
     def test_matrix_full(self, mock_cell):
         """Tests matrix_full function
 
@@ -54,7 +54,7 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(Functions.cdf(weights), expected)
 
     @patch('random.random')
-    @patch('Functions.cdf')
+    @patch('Simulations.Functions.cdf')
     def test_choice(self, mock_cdf, mock_random):
         """Tests choice function
 

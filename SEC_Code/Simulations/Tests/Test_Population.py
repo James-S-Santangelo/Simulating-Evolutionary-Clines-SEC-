@@ -105,7 +105,7 @@ class TestPopulation(unittest.TestCase):
         self.assertEqual(actual, expected)
         mock_rand_choice.assert_called_with(self.pop.locus_A)
 
-    @patch('Functions.choice')
+    @patch('Simulations.Functions.choice')
     def test_sample_alleles_mocked(self, mock_choice):
         """Tests sample_allele with mocked function
 
