@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.svg?branch=master)](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-)
+
 # Simulating Evolutionary Clines (SEC)
 ### Author: James Santangelo
 
