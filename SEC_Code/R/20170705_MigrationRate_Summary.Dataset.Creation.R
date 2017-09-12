@@ -29,7 +29,7 @@ dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 #Performed separately for every simulation and generation, begining with the generation the matrix full.
 dat_Miglm_sum <- dat_Mig_Vary %>%
   group_by(Mig_rate, Sim, Generation) %>%
-  filter(Mat.full == 1) %>%
+  filter(Mat_full == 1) %>%
   do(FitMigSim = lm(Cyan ~ Distance, data = .))
 
 #Create data frame with results from linear models

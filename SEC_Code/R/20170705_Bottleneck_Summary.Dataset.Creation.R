@@ -29,7 +29,7 @@ dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 #Performed separately for every simulation and generation, begining with the generation the matrix fill.
 dat_Botlm_sum <- dat_Bot_Vary %>%
   group_by(bot, Sim, Generation) %>%
-  filter(Mat.full == 1) %>%
+  filter(Mat_full == 1) %>%
   do(FitBotSim = lm(Cyan ~ Distance, data = .))
 
 #Create data frame with results from linear models
