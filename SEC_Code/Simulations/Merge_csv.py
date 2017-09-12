@@ -19,12 +19,12 @@ def merge_csv():
     1. merged csv
     '''
     # Specify the parameter value for which datasets should be merged
-    # param = sys.argv[1]
-    # value = sys.argv[2]
-    # parameter = param + value
+    param = sys.argv[1]
+    value = sys.argv[2]
+    parameter = param + value
 
     # Change directory to path containing .csv files to merge
-    os.chdir(sys.argv[1])
+    os.chdir(sys.argv[3])
 
     # Current date as local variable
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
@@ -32,11 +32,11 @@ def merge_csv():
     # Append all .csv files to python list
     filelist = []
     for file in glob.glob("*.csv"):
-        # if parameter in file:
-        filelist.append(file)
+        if parameter in file:
+            filelist.append(file)
 
     # Create file that will be the merged .csv file.
-    merged = open(datestring + "_" + sys.argv[2] + ".csv", "a")
+    merged = open(datestring + "_" + sys.argv[4] + ".csv", "a")
 
     # For first .csv file in filelist, read all lines
     for line in open(filelist[0]):
