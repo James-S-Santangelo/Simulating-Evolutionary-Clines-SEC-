@@ -8,27 +8,27 @@ library(dplyr)
 setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 # Load dataset that varies the bottleneck proportion and add distance column
-colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size")
+colsToKeep <- c("x", "y","bot_prop", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size")
 dat_Bot_Vary <- fread('20170912_Merged_BotOnly.csv', select = colsToKeep, header = T)
 dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 # dat_Bot_Vary$Recip = 1 / dat_Bot_Vary$Pop_size
 
 #Generate dataset showing Ne for every population, grouped by bottleneck strength
 # dat_bot_Ne <- dat_Bot_Vary %>%
-#   group_by(Sim, Population, bot, Distance) %>%
+#   group_by(Sim, Population, bot_prop, Distance) %>%
 #   summarise(sumRecip = sum(Recip),
 #             Generations = length(unique(Generation)),
 #             Ne = Generations / sumRecip)
-# dat_bot_Ne <- summarySE(dat_bot_Ne, groupvars = c("Population", "bot", "Distance"), measurevar = "Ne")
+# dat_bot_Ne <- summarySE(dat_bot_Ne, groupvars = c("Population", "bot_prop", "Distance"), measurevar = "Ne")
 
 #Write Ne dataset to csv
-today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
-fwrite(dat_bot_Ne, file = paste(today, "Ne_Bot.csv", sep = "_"), sep = ",", col.names = TRUE)
+# today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+# fwrite(dat_bot_Ne, file = paste(today, "Ne_Bot.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 #Run model testing for change in HCN frequency with distance across matrix.
 #Performed separately for every simulation and generation, begining with the generation the matrix fill.
 dat_Botlm_sum <- dat_Bot_Vary %>%
-  group_by(bot, Sim, Generation) %>%
+  group_by(bot_prop, Sim, Generation) %>%
   filter(Mat.full == 1) %>%
   do(FitBotSim = lm(Cyan ~ Distance, data = .))
 
@@ -50,7 +50,7 @@ fwrite(FitBotSimCoef, file = paste(today, "FitBotSimCoef.csv", sep = "_"), sep =
 #from linear models. Done for each generation, averaged across simulations.
 #Confidence intervals are also calculated.
 Bot_SlopeSum_Gen <- FitBotSimCoef %>%
-  group_by(bot, Generation) %>%
+  group_by(bot_prop, Generation) %>%
   summarise(mean = mean(estimate),
             sd = sd(estimate),
             n = length(estimate),
@@ -72,7 +72,7 @@ fwrite(Bot_SlopeSum_Gen, file = paste(today, "Bot_SlopeSum_Gen.csv", sep = "_"),
 #Get mean slope and proportion of significantly positive and negative slopes
 #for each value of the bottleneck proportion. 95% CI's also calculated.
 Bot_SlopeSum <- FitBotSimCoef %>%
-  group_by(bot) %>%
+  group_by(bot_prop) %>%
   summarise(mean = mean(estimate),
             sd = sd(estimate),
             n = length(estimate),
