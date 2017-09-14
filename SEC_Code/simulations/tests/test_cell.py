@@ -2,8 +2,8 @@ import unittest
 import math
 from mock import patch, Mock
 
-from Simulations.Cell import Cell
-from Simulations.Population import Population
+from simulations.cell import Cell
+from simulations.population import Population
 
 
 class TestCell(unittest.TestCase):
@@ -100,7 +100,7 @@ class TestCell(unittest.TestCase):
         # Raises attribute error if function called on cell with no population
         self.assertRaises(AttributeError, self.Matrix[0][2].weight_create_prob, 1000, 1)
 
-    @patch('Simulations.Functions.choice')
+    @patch('simulations.functions.choice')
     def test_will_create(self, mock_choice):
         """Tests will_create method
 
@@ -147,11 +147,11 @@ class TestCell(unittest.TestCase):
         expected_list = []
         self.assertListEqual(self.Matrix[0][0].empty_neighbors(self.num_rows, self.num_cols, self.Matrix), expected_list)
 
-    @patch('Simulations.Population.Population')
+    @patch('simulations.population.Population')
     @patch('random.randint')
-    @patch('Simulations.Cell.Cell.empty_neighbors')
-    @patch('Simulations.Cell.Cell.will_create')
-    @patch('Simulations.Cell.Cell.weight_create_prob')
+    @patch('simulations.cell.Cell.empty_neighbors')
+    @patch('simulations.cell.Cell.will_create')
+    @patch('simulations.cell.Cell.weight_create_prob')
     def test_create_population(self, mock_weighted, mock_will_create, mock_neighbors, mock_random, mock_new_pop):
         """Tests create_population method
 
@@ -262,7 +262,7 @@ class TestCell(unittest.TestCase):
         self.assertEqual(self.Matrix[1][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
         self.assertEqual(self.Matrix[0][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
 
-    @patch('Simulations.Cell.Cell.real_migration_rate')
+    @patch('simulations.cell.Cell.real_migration_rate')
     def test_source_population_info(self, mock_real):
         """Tests source_population_info method
 

@@ -3,9 +3,9 @@ from datetime import datetime
 import csv
 import math
 
-from Simulations.Cell import Cell
-from Simulations.Population import Population
-from Simulations import Functions
+from simulations.cell import Cell
+from simulations.population import Population
+from simulations import functions
 
 pA = 0.5
 pB = 0.5
@@ -70,7 +70,7 @@ def simulate():
                          "Pop_size",
                          "min_K", "max_K"])
 
-        Functions.print_progress(0, sims, prefix='', suffix='', decimals=1, bar_length=100)
+        functions.print_progress(0, sims, prefix='', suffix='', decimals=1, bar_length=100)
         for s in range(sims):
 
             results = []
@@ -82,13 +82,13 @@ def simulate():
             Matrix[0][0].pop = True
             Matrix[0][0].population = Population(N, locus_A, locus_B)
 
-            Functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
+            functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
 
-            Functions.write_to_csv(writer, results)
+            functions.write_to_csv(writer, results)
 
             del results
 
-            Functions.print_progress(s + 1, sims, prefix='', suffix='', decimals=1, bar_length=100)
+            functions.print_progress(s + 1, sims, prefix='', suffix='', decimals=1, bar_length=100)
 
 
 if __name__ == '__main__':

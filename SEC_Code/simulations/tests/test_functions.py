@@ -2,13 +2,13 @@ import unittest
 from parameterized import parameterized
 from mock import patch
 
-from Simulations import Functions
+from simulations import functions
 
 
 class TestFunctions(unittest.TestCase):
     """Unit tests for Functions.py"""
 
-    @patch('Simulations.Cell.Cell')
+    @patch('simulations.cell.Cell')
     def test_matrix_full(self, mock_cell):
         """Tests matrix_full function
 
@@ -23,7 +23,7 @@ class TestFunctions(unittest.TestCase):
                 Matrix[i][j] = mock_cell
                 Matrix[i][j].pop = False
 
-        self.assertEqual(Functions.matrix_full(Matrix), 0)
+        self.assertEqual(functions.matrix_full(Matrix), 0)
 
         # Correctly returns 1 if Matrix is completely full
         for i in range(len(Matrix)):
@@ -31,7 +31,7 @@ class TestFunctions(unittest.TestCase):
                 Matrix[i][j] = mock_cell
                 Matrix[i][j].pop = True
 
-        self.assertEqual(Functions.matrix_full(Matrix), 1)
+        self.assertEqual(functions.matrix_full(Matrix), 1)
 
         # Correctly returns 0 if Matrix is only partially full
         Matrix[0][0].pop = True
@@ -39,7 +39,7 @@ class TestFunctions(unittest.TestCase):
         Matrix[1][0].pop = True
         Matrix[1][1].pop = False
 
-        self.assertEqual(Functions.matrix_full(Matrix), 0)
+        self.assertEqual(functions.matrix_full(Matrix), 0)
 
     @parameterized.expand([([0.0, 1.0], [0.0, 1.0]), ([0.5, 0.5], [0.5, 1.0]), ([0.2, 0.8], [0.2, 1.0])])
     def test_cdf(self, weights, expected):
@@ -51,10 +51,10 @@ class TestFunctions(unittest.TestCase):
         """
 
         # Returns correct cdf for various input lists specified in parameterized.expand.
-        self.assertEqual(Functions.cdf(weights), expected)
+        self.assertEqual(functions.cdf(weights), expected)
 
     @patch('random.random')
-    @patch('Simulations.Functions.cdf')
+    @patch('simulations.functions.cdf')
     def test_choice(self, mock_cdf, mock_random):
         """Tests choice function
 
@@ -70,7 +70,7 @@ class TestFunctions(unittest.TestCase):
         weights = [0.0, 1.0]
         expected = 'a'
 
-        self.assertEqual(Functions.choice(possibilities, weights), expected)
+        self.assertEqual(functions.choice(possibilities, weights), expected)
 
         # Correctly returns 'A' when probability of sampling 'A' is 0.5 and random value is less than 0.5
         mock_cdf.return_value = [0.5, 1.0]
@@ -78,7 +78,7 @@ class TestFunctions(unittest.TestCase):
         weights = [0.5, 0.5]
         expected = 'A'
 
-        self.assertEqual(Functions.choice(possibilities, weights), expected)
+        self.assertEqual(functions.choice(possibilities, weights), expected)
 
         # Correctly returns 'a' when probability of sampling 'A' is 0.5 and random value is greater than 0.5
         mock_cdf.return_value = [0.5, 1.0]
@@ -86,7 +86,7 @@ class TestFunctions(unittest.TestCase):
         weights = [0.5, 0.5]
         expected = 'a'
 
-        self.assertEqual(Functions.choice(possibilities, weights), expected)
+        self.assertEqual(functions.choice(possibilities, weights), expected)
 
         # Correctly returns 'A' when probability of sampling 'A' is 0.8 and random value is less than 0.2
         mock_cdf.return_value = [0.2, 1.0]
@@ -94,7 +94,7 @@ class TestFunctions(unittest.TestCase):
         weights = [0.2, 0.8]
         expected = 'A'
 
-        self.assertEqual(Functions.choice(possibilities, weights), expected)
+        self.assertEqual(functions.choice(possibilities, weights), expected)
 
         # Correctly returns 'a' when probability of sampling 'a' is 0.2 and random value is greater than 0.2
         mock_cdf.return_value = [0.2, 1.0]
@@ -102,7 +102,7 @@ class TestFunctions(unittest.TestCase):
         weights = [0.2, 0.8]
         expected = 'a'
 
-        self.assertEqual(Functions.choice(possibilities, weights), expected)
+        self.assertEqual(functions.choice(possibilities, weights), expected)
 
 if __name__ == '__main__':
     unittest.main()

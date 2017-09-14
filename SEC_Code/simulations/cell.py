@@ -1,8 +1,8 @@
 import math
 import random
 
-from Simulations import Population
-from Simulations import Functions
+from simulations import population
+from simulations import functions
 
 
 class Cell(object):
@@ -79,7 +79,7 @@ class Cell(object):
         possibilities = '10'
         weighted_create_prob = float(weighted_create_prob)
         weights = [weighted_create_prob, (1 - weighted_create_prob)]
-        will_create = Functions.choice(possibilities, weights)
+        will_create = functions.choice(possibilities, weights)
         if will_create == '1':
             return True
         else:
@@ -165,7 +165,7 @@ class Cell(object):
                     new_size = int(math.ceil(bot_prop * self.population.size))
                     new_locus_A = self.population.sample_population(self.population.locus_A, new_size)
                     new_locus_B = self.population.sample_population(self.population.locus_B, new_size)
-                    Matrix[i][j].population = Population.Population(new_size, new_locus_A, new_locus_B)
+                    Matrix[i][j].population = population.Population(new_size, new_locus_A, new_locus_B)
             else:
                 return None
         else:

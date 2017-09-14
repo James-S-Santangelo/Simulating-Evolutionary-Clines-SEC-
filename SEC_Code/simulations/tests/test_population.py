@@ -3,7 +3,7 @@ from parameterized import parameterized
 from mock import patch
 import math
 
-from Simulations import Population
+from simulations import population
 
 
 class TestPopulation(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestPopulation(unittest.TestCase):
         qB = 1 - pB
         locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))
         locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
-        self.pop = Population.Population(N, locus_A, locus_B)
+        self.pop = population.Population(N, locus_A, locus_B)
 
     def tearDown(self):
         """tearDown function that deletes landscape matrix after each test"""
@@ -105,7 +105,7 @@ class TestPopulation(unittest.TestCase):
         self.assertEqual(actual, expected)
         mock_rand_choice.assert_called_with(self.pop.locus_A)
 
-    @patch('Simulations.Functions.choice')
+    @patch('simulations.functions.choice')
     def test_sample_alleles_mocked(self, mock_choice):
         """Tests sample_allele with mocked function
 
