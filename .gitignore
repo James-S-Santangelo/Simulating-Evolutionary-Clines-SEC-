@@ -6,5 +6,6 @@ SEC_Code/dataset_creation/Drift.R
 SEC_Code/simulations/Old_Code/
 SEC_Code/simulations/tests/__pycache__/
 build
+files.txt
 sec-venv
 *.pyc
