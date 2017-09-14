@@ -22,7 +22,7 @@ dat_Bot_Vary$Distance  <- sqrt((dat_Bot_Vary$x - 0)^2 + (dat_Bot_Vary$y - 0)^2)
 # dat_bot_Ne <- summarySE(dat_bot_Ne, groupvars = c("Population", "bot", "Distance"), measurevar = "Ne")
 
 #Write Ne dataset to csv
-# today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 # fwrite(dat_bot_Ne, file = paste(today, "Ne_Bot.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 #Run model testing for change in HCN frequency with distance across matrix.

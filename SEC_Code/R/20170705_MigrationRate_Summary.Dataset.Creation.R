@@ -22,7 +22,7 @@ dat_Mig_Vary$Distance  <- sqrt((dat_Mig_Vary$x - 0)^2 + (dat_Mig_Vary$y - 0)^2)
 # dat_mig_Ne <- summarySE(dat_mig_Ne, groupvars = c("Population", "Mig_rate", "Distance"), measurevar = "Ne")
 
 #Write Ne dataset to csv
-# today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 # fwrite(dat_mig_Ne, file = paste(today, "Ne_Mig.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 #Run model testing for change in HCN frequency with distance across matrix.
