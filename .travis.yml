@@ -7,4 +7,4 @@ install:
   - pip install nose
   - pip install .
 script:
-  - nosetests -w SEC_Code/Simulations/Tests
+  - nosetests -w SEC_Code/simulations/tests
