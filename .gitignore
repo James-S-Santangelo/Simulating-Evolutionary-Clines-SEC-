@@ -1,10 +1,11 @@
+simulations.egg-info/
 SEC_Data
 SEC_Figures
 SEC_Notebooks
 SEC_Writings
-SEC_Code/dataset_creation/Drift.R
-SEC_Code/simulations/Old_Code/
-SEC_Code/simulations/tests/__pycache__/
+dataset_creation/Drift.R
+simulations/Old_Code/
+simulations/tests/__pycache__/
 build
 files.txt
 sec-venv
