@@ -4,7 +4,6 @@ python:
   - "pypy"  # PyPy2 5.8.0
 install:
   - pip install -r requirements.txt
-  - pip install nose
-  - pip install .
+  - pip install -e .
 script:
-  - nosetests -w SEC_Code/simulations/tests
+  - nosetests -w simulations/tests
