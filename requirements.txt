@@ -1,10 +1,7 @@
-cffi==1.10.1
 funcsigs==1.0.2
-greenlet==0.4.12
 mock==2.0.0
 nose==1.3.7
 parameterized==0.6.1
 pbr==3.1.1
-readline==6.2.4.1
--e git+https://github.com/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.git@ab33c6e1db7174f0a2010722e06d5dc5f92ef2de#egg=simulations
+-e git+https://github.com/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.git@85cbb6d28b715ec0fdafc44eecc3827b8a6f2134#egg=simulations
 six==1.10.0
