@@ -98,7 +98,11 @@ def cline(s, results, steps, Matrix):
     Returns:
         None: Simply generates results and appends them to results list.
     """
+
     from simulations.cell import Cell
+
+    steps = 50
+    """int: Number of generations"""
 
     for step in range(steps):
 

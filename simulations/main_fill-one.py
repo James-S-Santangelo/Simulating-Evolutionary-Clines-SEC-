@@ -7,15 +7,6 @@ from simulations.cell import Cell
 from simulations.population import Population
 from simulations import functions
 
-steps = 50
-"""int: Number of generations"""
-
-pA = 0.5
-pB = 0.5
-
-export_path = "/Users/jamessantangelo/Desktop/CSV/"
-"""str: Path to where dataset should be exported"""
-
 
 def simulate():
     """Main function. Runs 'sims' iterations of 'cline' across landscape
@@ -30,12 +21,15 @@ def simulate():
     sims = 1
     """int: Number of simulations"""
 
+    export_path = "/Users/jamessantangelo/Desktop/CSV/"
+    """str: Path to where dataset should be exported"""
+
     print os.getpid()
 
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "Drift.Migration_OneFill(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
+    with open(datestring + "Drift.Migration_OneFill(pA%.2f)(pB%.2f).csv" % (Population.pA, Population.pB), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
@@ -48,6 +42,8 @@ def simulate():
             results = []
 
             N = 1000
+            pA = Population.pA
+            pB = Population.pB
             qA = 1 - pA
             qB = 1 - pB
             locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))

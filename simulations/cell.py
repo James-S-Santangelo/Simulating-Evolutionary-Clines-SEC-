@@ -9,7 +9,7 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = float(sys.argv[1])
+    max_mig_rate = 0.1
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000

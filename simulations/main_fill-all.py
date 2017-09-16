@@ -7,16 +7,6 @@ from simulations.cell import Cell
 from simulations.population import Population
 from simulations import functions
 
-pA = 0.5
-pB = 0.5
-"""float: Frequency of 'A', 'B', 'a', and 'b' alleles"""
-
-steps = 50
-"""int: Number of generations"""
-
-export_path = "/Users/jamessantangelo/Desktop/CSV/"
-"""str: Path to where dataset should be exported"""
-
 
 def simulate():
     """Main function. Runs 'sims' iterations of 'cline' across landscape
@@ -31,12 +21,15 @@ def simulate():
     sims = 1
     """int: Number of simulations"""
 
+    export_path = "/Users/jamessantangelo/Desktop/CSV/"
+    """str: Path to where dataset should be exported"""
+
     print os.getpid()
 
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "Drift.Migration_AllFill(pA%.2f)(pB%.2f).csv" % (pA, pB), "wb") as f:
+    with open(datestring + "Drift.Migration_AllFill(pA%.2f)(pB%.2f).csv" % (Population.pA, Population.pB), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
@@ -49,6 +42,8 @@ def simulate():
             results = []
 
             Matrix = Cell.initialize_matrix()
+            pA = Population.pA
+            pB = Population.pB
             qA = 1 - pA
             qB = 1 - pB
             for i in range(Cell.num_rows):

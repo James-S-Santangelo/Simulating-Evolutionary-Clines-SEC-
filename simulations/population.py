@@ -1,11 +1,16 @@
 import math
 import random
+import sys
 
 from simulations import functions
 
 
 class Population(object):
     """Controls populations assigned to cells in the landscape matrix"""
+
+    pA = 0.5
+    pB = 0.5
+    """float: Frequency of 'A', 'B', 'a', and 'b' alleles"""
 
     r = math.log(1.5)
     """r (float): Instantaneous rate of population increase"""
