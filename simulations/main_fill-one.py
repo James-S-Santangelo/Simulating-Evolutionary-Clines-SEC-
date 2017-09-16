@@ -9,26 +9,6 @@ from simulations import functions
 steps = 50
 """int: Number of generations"""
 
-max_mig_rate = 0.0
-"""float: Maximum migration rate between any two populations"""
-
-max_K = 1000
-min_K = 10
-"""int: Maximum and minimum carying capacity of cells across the matrix"""
-
-num_rows = 1
-num_cols = 5
-"""int: Number of rows and number of columns in landscape matrix"""
-
-bot_prop = 1.0
-"""float: Bottleneck proportion
-
-Proportion of alleles sampled when new population is created
-"""
-
-max_p_create = 0
-"""float: Maximum probability of creating a new population"""
-
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
 """str: Path to where dataset should be exported"""
 
