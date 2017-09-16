@@ -2,6 +2,8 @@ import sys
 import random
 import bisect
 
+from simulations.cell import Cell
+
 
 def matrix_full(Matrix):
     """Checks whether every every cell in landscape matrix contains a population
@@ -82,7 +84,7 @@ def choice(possibilities, weights):
     return possibilities[idx]
 
 
-def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob, bot_prop, min_K, max_K, max_mig_rate):
+def cline(s, results, steps, pA, pB, Matrix):
     """Does all of the heavy lifting in simulations
 
     Uses most core functions and methods from other modules to excercise both within- and between population dynamics. This includes population growth, migration, selection, and population creation.
@@ -90,23 +92,17 @@ def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob
     Args:
         s (int): current iteration of simulations
         results (:obj:'list' of :obj:'int' or 'float'): list storing all information of populations each generation and parameters used in simulations
-        num_rows (int): Number of rows in landscape
-        num_cols (int): Number of columns in landscape
         steps (int): number of generations
         pA (float): frequency of 'A' allele
         pB (float): frequency of 'B' allele
         Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position.
-        max_create_prob (float): maximum probability of creating a population bot_prop (float): Bottleneck proportion. Proportion of alleles sampled upon creation of new population.
-        min_K (int): Minimum carrying capacity of populations in the matrix max_K (int): Maximum carrying capacity of populations in the matrix
-        r (float): Instantaneous rate of population increase (i.e. growth rate)
-        max_mig_rate (float): Maximum possible migration between two populations.
 
     Returns:
         None: Simply generates results and appends them to results list.
     """
     for step in range(steps):
 
-        pop_list = [(i, j) for j in range(num_cols) for i in range(num_rows) if Matrix[i][j].pop]
+        pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if Matrix[i][j].pop]
 
         mat_full = matrix_full(Matrix)
 
@@ -114,22 +110,22 @@ def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob
 
             i, j = pop[0], pop[1]
 
-            create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, mat_full, s, step, max_create_prob)
+            create_results(results, Matrix, i, j, mat_full, s, step)
 
-            K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
+            K = Matrix[i][j].real_K()
 
             Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K)
 
-            pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
-            pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
+            pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[0]
+            pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[1]
 
             Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, 'Aa')
             Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, 'Bb')
 
-            Matrix[i][j].create_population(num_rows, num_cols, Matrix, max_create_prob, bot_prop, K)
+            Matrix[i][j].create_population(Matrix, K)
 
 
-def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, mat_full, s, step, max_create_prob):
+def create_results(results, Matrix, i, j, mat_full, s, step):
     """Appends all population statistics and global parameters to results list
 
         Args:
@@ -137,27 +133,26 @@ def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_
         Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position.
         i (int): Row number of cell in landscape matrix
         j (int): Column nujmber of cell in landscape matrix
-        num_rows (int): Number of rows in landscape
-        num_cols (int): Number of columns in landscape
-        max_mig_rate (float): Maximum possible migration between two populations.
-        min_K (int): Minimum carrying capacity of populations in the matrix max_K (int): Maximum carrying capacity of populations in the matrix
-        r (float): Instantaneous rate of population increase (i.e. growth rate)
         mat_full (int): 1 if matrix is full, 0 if there are sill empty cells.
         (float): frequency of 'A' allele
         s (int): current iteration of simulations
         step (int): current generation
-        max_create_prob (float): maximum probability of creating a population bot_prop (float): Bottleneck proportion. Proportion of alleles sampled upon creation of new population.
 
     Returns:
         None: Appends them to results list.
     """
     r = Matrix[0][0].population.r
+    max_create_prob = Cell.max_create_prob
+    bot_prop = Cell.bot_prop
+    max_mig_rate = Cell.max_mig_rate
+    min_K = Cell.min_K
+    max_K = Cell.max_K
 
     size = Matrix[i][j].population.size
     pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
     pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
     phen = Matrix[i][j].population.phenotype(pA, pB)
-    K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
+    K = Matrix[i][j].real_K()
 
     results.append([s, i, j, step, round(pA, 3), round(pB, 3),
                     round(phen, 3), max_create_prob, K, round(r, 3),

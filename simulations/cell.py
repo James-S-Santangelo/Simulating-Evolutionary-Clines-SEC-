@@ -8,6 +8,26 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
+    max_mig_rate = 0.0
+    """float: Maximum migration rate between any two populations"""
+
+    max_K = 1000
+    min_K = 1000
+    """int: Maximum and minimum carying capacity of cells across the matrix"""
+
+    num_rows = 1
+    num_cols = 5
+    """int: Number of rows and number of columns in landscape matrix"""
+
+    bot_prop = 1.0
+    """float: Bottleneck proportion
+
+    Proportion of alleles sampled when new population is created
+    """
+
+    max_create_prob = 0
+    """float: Maximum probability of creating a new population"""
+
     def __init__(self, i, j, pop):
         """Class constructor function
 
@@ -21,23 +41,22 @@ class Cell(object):
         self.pop = False
 
     @classmethod
-    def initialize_matrix(cls, num_cols, num_rows):
+    def initialize_matrix(cls):
         """Creates the landscape matrix and intantiates each cell with a Cell object
 
         Args:
-            num_cols (int): Number of columns in landscape
-            num_rows (int): Number of rows in landscape
+            None
 
         Returns:
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position
         """
-        Matrix = [[0] * num_cols for _ in range(num_rows)]
-        for i in range(num_rows):
-            for j in range(num_cols):
+        Matrix = [[0] * Cell.num_cols for _ in range(Cell.num_rows)]
+        for i in range(Cell.num_rows):
+            for j in range(Cell.num_cols):
                 Matrix[i][j] = cls(i, j, pop=False)
         return Matrix
 
-    def weight_create_prob(self, max_pop_size, max_create_prob):
+    def weight_create_prob(self, max_pop_size):
         """Weights the probability of creating a population
 
         Based on maximum desired creation probability and a populations
@@ -46,7 +65,6 @@ class Cell(object):
 
         Args:
             max_pop_size (int): Maximum population size (i.e. carrying capacity)
-            max_create_prob (float): Maximum probability of creating a new population
 
         Returns:
             weighted_create_prob (float): weighted probability of creating a population
@@ -54,8 +72,8 @@ class Cell(object):
         Raises:
             ValueError: If max_create_prop is negative or greater than 1
             """
-        if 0 <= max_create_prob <= 1:
-            max_create_prob = float(max_create_prob)
+        if 0 <= Cell.max_create_prob <= 1:
+            max_create_prob = float(Cell.max_create_prob)
             slope = (max_create_prob - 0) / (max_pop_size - 0)
             size = self.population.size
             weighted_create_prob = size * slope
@@ -85,15 +103,13 @@ class Cell(object):
         else:
             return False
 
-    def empty_neighbors(self, num_rows, num_cols, Matrix):
+    def empty_neighbors(self, Matrix):
         """Checks all adjacent cells in landscape matrix for populations
 
         Check whether adjacent cells in the landscape matrix contains populations,
         ignoring boundaries.
 
         Args:
-            num_rows (int): Number of rows in landscape matrix
-            num_cols (int): Number of columns in landscape matrix
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position.
 
         Returns:
@@ -106,12 +122,12 @@ class Cell(object):
         if self.pop:
             neighbors = [(x2, y2) for x2 in range(self.i - 1, self.i + 2)
                          for y2 in range(self.j - 1, self.j + 2)
-                         if (-1 < self.i <= num_rows - 1
-                             and -1 < self.j <= num_cols - 1
+                         if (-1 < self.i <= Cell.num_rows - 1
+                             and -1 < self.j <= Cell.num_cols - 1
                              and (self.i != x2
                                   or self.j != y2)
-                             and (0 <= x2 <= num_rows - 1)
-                             and (0 <= y2 <= num_cols - 1))]
+                             and (0 <= x2 <= Cell.num_rows - 1)
+                             and (0 <= y2 <= Cell.num_cols - 1))]
 
             empty_neighbors = []
             for item in neighbors:
@@ -126,7 +142,7 @@ class Cell(object):
         else:
             raise Exception('Cell without population cannot create new populations (obviously')
 
-    def create_population(self, num_rows, num_cols, Matrix, max_create_prob, bot_prop, max_pop_size):
+    def create_population(self, Matrix, max_pop_size):
         """Creates a population in randomly chosen, empty, adjacent cell
 
         Creates a new population in a randomly selected adjacent cell that
@@ -135,11 +151,7 @@ class Cell(object):
         sampled depends on the bottleneck proportion.
 
         Args:
-            num_rows (int): Number of rows in the landscape matrix
-            num_cols (int): Number of columns in the landscape matrix
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position.
-            max_create_prob (float): Maximum probability of creating a new population.
-            bot_prop (float): Bottleneck proportion. Proportion of alleles sampled upon creation of new population.
             max_pop_size (int): Maximum population size (i.e. carrying capacity).
 
             Returns:
@@ -149,20 +161,20 @@ class Cell(object):
             Raises:
                 Exception: if bottleneck proportion is 0.
         """
-        weighted_create_prob = self.weight_create_prob(max_pop_size, max_create_prob)
+        weighted_create_prob = self.weight_create_prob(max_pop_size)
         will_create = self.will_create(weighted_create_prob)
 
         if will_create:
-            empty_neighbors = self.empty_neighbors(num_rows, num_cols, Matrix)
+            empty_neighbors = self.empty_neighbors(Matrix)
 
             if empty_neighbors:
-                if bot_prop == 0:
+                if Cell.bot_prop == 0:
                     raise Exception('You cannot create new empty populations!')
                 else:
                     index = random.randint(0, len(empty_neighbors) - 1)
                     i, j = empty_neighbors[index][0], empty_neighbors[index][1]
                     Matrix[i][j].pop = True
-                    new_size = int(math.ceil(bot_prop * self.population.size))
+                    new_size = int(math.ceil(Cell.bot_prop * self.population.size))
                     new_locus_A = self.population.sample_population(self.population.locus_A, new_size)
                     new_locus_B = self.population.sample_population(self.population.locus_B, new_size)
                     Matrix[i][j].population = population.Population(new_size, new_locus_A, new_locus_B)
@@ -171,7 +183,7 @@ class Cell(object):
         else:
             return None
 
-    def real_migration_rate(self, source_y, source_x, num_rows, num_cols, max_mig_rate):
+    def real_migration_rate(self, source_y, source_x):
         """Calculates migration rate between populations
 
         Calculates the realized migration rate between two populations, which
@@ -180,25 +192,22 @@ class Cell(object):
         Args:
             source_y (int): Row index of source population (i.e. from which alleles are arriving)
             source_x (int): Column index of source population (i.e. from which alleles are arriving)
-            num_rows (int): Number of rows in landscape matrix.
-            num_cols (int): Number of columns in landscape matrix
-            max_mig_rate (float): Maximum possible migration between two populations
 
         Returns:
             mig_prop (float): Proportion of alleles migrating between focal and source population.
         """
         dist = (((source_y - self.i) ** 2) + ((source_x - self.j) ** 2)) ** (0.5)
-        max_i = num_rows - 1
-        max_j = num_cols - 1
+        max_i = Cell.num_rows - 1
+        max_j = Cell.num_cols - 1
         start_y = 0
         start_x = 0
         max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
         # max_dist = max_dist
-        slope_mig = (0 - max_mig_rate) / (max_dist - 0)
-        mig_prop = slope_mig * dist + max_mig_rate
+        slope_mig = (0 - Cell.max_mig_rate) / (max_dist - 0)
+        mig_prop = slope_mig * dist + Cell.max_mig_rate
         return round(mig_prop, 4)
 
-    def real_K(self, num_rows, num_cols, min_K, max_K):
+    def real_K(self):
         """Calculates carrying capacity of cell in the matrix
 
         Calculates the relized carrying capacity of cell in the matrix, which
@@ -206,34 +215,28 @@ class Cell(object):
         initialized landscape cell.
 
         Args:
-            num_rows (int): Number of rows in the landscape matrix
-            num_cols (int): Number of columns in the landscape matrix
-            min_K (int): Minimum carrying capacity at cell furthest away from start
-            max_K (int): Maximum possible carrying capacity (i.e. at start).
+            None
 
-            returns:
-                K (float): Realized carrying capacity of landscape matrix cell.
+        returns:
+            K (float): Realized carrying capacity of landscape matrix cell.
         """
         start_y = 0
         start_x = 0
         dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
-        max_i = num_rows - 1
-        max_j = num_cols - 1
+        max_i = Cell.num_rows - 1
+        max_j = Cell.num_cols - 1
         max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
-        slope_K = (min_K - max_K) / (max_dist - 0)
-        K = max_K + slope_K * dist
+        slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
+        K = Cell.max_K + slope_K * dist
         return int(math.ceil(K))
 
-    def source_population_info(self, pop_list, Matrix, num_rows, num_cols, max_mig_rate):
+    def source_population_info(self, pop_list, Matrix):
         """Collects migration, allele frequency, and population size info from all source populations
 
         Args:
             pop_list (:obj:'list' of :obj:'tuple'): Tuples with row and columns indices of all landscape
             cells with populations.
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position
-            num_rows (int): Number of rows in landscape matrix.
-            num_cols (int): Number of columns in landscape matrix
-            max_mig_rate (float): Maximum possible migration between two populations
 
         Returns:
             migration_weighted (:obj:`list` of :obj:`float`): Realized migration rates from all source
@@ -256,7 +259,7 @@ class Cell(object):
 
                 source_pop = Matrix[source_y][source_x]
 
-                mig_rate = self.real_migration_rate(source_y, source_x, num_rows, num_cols, max_mig_rate)
+                mig_rate = self.real_migration_rate(source_y, source_x)
                 allele_freq_A = source_pop.population.allele_freq(source_pop.population.locus_A)
                 allele_freq_B = source_pop.population.allele_freq(source_pop.population.locus_B)
                 population_size = source_pop.population.size
@@ -303,24 +306,21 @@ class Cell(object):
 
         return round(p_1, 4)
 
-    def alleles_next_gen(self, pop_list, Matrix, num_rows, num_cols, max_mig_rate):
+    def alleles_next_gen(self, pop_list, Matrix):
         """Calculates frequency of allele in next generation following migration and selection
 
         Args:
             pop_list (:obj:'list' of :obj:'tuple'): Tuples with row and columns indices of all landscape
             cells with populations.
             Matrix (:obj:'list' of :obj:'int'): 2D array storing instance of Cell at every position
-            num_rows (int): Number of rows in landscape matrix.
-            num_cols (int): Number of columns in landscape matrix
-            max_mig_rate (float): Maximum possible migration between two populations
 
         Returns:
             pA1 and pB1 (float): Frequency of A and B allele following migration and selection
         """
-        weighting_factor_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[3]
-        migration_weighting_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
-        allele_weighted_A_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
-        allele_weighted_B_list = self.source_population_info(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[2]
+        weighting_factor_list = self.source_population_info(pop_list, Matrix)[3]
+        migration_weighting_list = self.source_population_info(pop_list, Matrix)[0]
+        allele_weighted_A_list = self.source_population_info(pop_list, Matrix)[1]
+        allele_weighted_B_list = self.source_population_info(pop_list, Matrix)[2]
 
         migration_weighted = self.weighting(migration_weighting_list, weighting_factor_list)
         allele_weighted_A = self.weighting(allele_weighted_A_list, weighting_factor_list)

@@ -22,10 +22,10 @@ class TestCell(unittest.TestCase):
         where cells that are not 0 contain populations. Numbers correspond to
         the mocked populations created in function.
         """
-        self.num_rows = 2
-        self.num_cols = 3
+        Cell.num_rows = 2
+        Cell.num_cols = 3
 
-        self.Matrix = Cell.initialize_matrix(self.num_cols, self.num_rows)
+        self.Matrix = Cell.initialize_matrix()
 
         # N = 10, pA = 0.5, pB = 0.5
         mock_pop_1 = Mock(spec=Population, size=10, locus_A=(['A'] * 5) + (['a'] * 5), locus_B=(['B'] * 5) + (['b'] * 5))
@@ -48,21 +48,21 @@ class TestCell(unittest.TestCase):
 
     def test_initialize_matrix(self):
         """Tests initialize_matrix method"""
-        num_rows = 2
-        num_cols = 5
-        Matrix = Cell.initialize_matrix(num_cols, num_rows)
+        Cell.num_rows = 2
+        Cell.num_cols = 5
+        Matrix = Cell.initialize_matrix()
 
         # Checks that initialize_matrix successfully instantiates Cell objects in cells.
-        for i in range(num_rows):
-            for j in range(num_cols):
+        for i in range(Cell.num_rows):
+            for j in range(Cell.num_cols):
                 assert isinstance(Matrix[i][j], Cell)
 
     def test_init(self):
         """Tests contructor method"""
 
         # Tests that row and column indices are successfully assigned.
-        for i in range(self.num_rows):
-            for j in range(self.num_cols):
+        for i in range(Cell.num_rows):
+            for j in range(Cell.num_cols):
                 self.assertEqual(self.Matrix[i][j].i, i)
                 self.assertEqual(self.Matrix[i][j].j, j)
 
@@ -85,20 +85,27 @@ class TestCell(unittest.TestCase):
         """Tests weight_create_prob method"""
 
         # Zero returned when max_prob_create is 0
-        self.assertEqual(self.Matrix[0][0].weight_create_prob(1000, 0), 0)
+        Cell.max_create_prob = 0
+        self.assertEqual(self.Matrix[0][0].weight_create_prob(1000), 0)
         # Correct computation of creation probability
-        self.assertEqual(self.Matrix[0][0].weight_create_prob(100, 0.5), 0.05)
+        Cell.max_create_prob = 0.5
+        self.assertEqual(self.Matrix[0][0].weight_create_prob(100), 0.05)
         # Computes current probability as max_prob when current size is equal to max_size
-        self.assertEqual(self.Matrix[0][0].weight_create_prob(10, 0.5), 0.5)
+        Cell.max_create_prob = 0.5
+        self.assertEqual(self.Matrix[0][0].weight_create_prob(10), 0.5)
         # Correct computation when max_size is 1
-        self.assertEqual(self.Matrix[0][0].weight_create_prob(1000, 1), 0.01)
+        Cell.max_create_prob = 1
+        self.assertEqual(self.Matrix[0][0].weight_create_prob(1000), 0.01)
 
         # Raises ValueError if creation_prob is greater than 1
-        self.assertRaises(ValueError, self.Matrix[0][0].weight_create_prob, 1000, 1.5)
+        Cell.max_create_prob = 1.5
+        self.assertRaises(ValueError, self.Matrix[0][0].weight_create_prob, 1000)
         # Raises ValueError if creation_prob is negative
-        self.assertRaises(ValueError, self.Matrix[0][0].weight_create_prob, 1000, -0.5)
+        Cell.max_create_prob = -0.5
+        self.assertRaises(ValueError, self.Matrix[0][0].weight_create_prob, 1000)
         # Raises attribute error if function called on cell with no population
-        self.assertRaises(AttributeError, self.Matrix[0][2].weight_create_prob, 1000, 1)
+        Cell.max_create_prob = 1
+        self.assertRaises(AttributeError, self.Matrix[0][2].weight_create_prob, 1000)
 
     @patch('simulations.functions.choice')
     def test_will_create(self, mock_choice):
@@ -125,14 +132,14 @@ class TestCell(unittest.TestCase):
 
         # Correctly returns empty adjacent cells. Tested on all mocked populations
         expected_list = [(1, 0), (1, 1)]
-        self.assertListEqual(self.Matrix[0][0].empty_neighbors(self.num_rows, self.num_cols, self.Matrix), expected_list)
+        self.assertListEqual(self.Matrix[0][0].empty_neighbors(self.Matrix), expected_list)
         expected_list = [(0, 2), (1, 0), (1, 1)]
-        self.assertListEqual(self.Matrix[0][1].empty_neighbors(self.num_rows, self.num_cols, self.Matrix), expected_list)
+        self.assertListEqual(self.Matrix[0][1].empty_neighbors(self.Matrix), expected_list)
         expected_list = [(0, 2), (1, 1)]
-        self.assertListEqual(self.Matrix[1][2].empty_neighbors(self.num_rows, self.num_cols, self.Matrix), expected_list)
+        self.assertListEqual(self.Matrix[1][2].empty_neighbors(self.Matrix), expected_list)
 
         # Fails since no population in cell calling neighbors method
-        self.assertRaises(Exception, self.Matrix[0][2].empty_neighbors, self.num_rows, self.num_cols, self.Matrix)
+        self.assertRaises(Exception, self.Matrix[0][2].empty_neighbors, self.Matrix)
 
         # Return empty list if all adjacent cells are occupied
         mock_pop_4 = Mock(spec=Population, size=10, locus_A=(['A'] * 5) + (['a'] * 5), locus_B=(['B'] * 5) + (['b'] * 5))
@@ -145,7 +152,7 @@ class TestCell(unittest.TestCase):
         self.Matrix[1][1].pop = True
 
         expected_list = []
-        self.assertListEqual(self.Matrix[0][0].empty_neighbors(self.num_rows, self.num_cols, self.Matrix), expected_list)
+        self.assertListEqual(self.Matrix[0][0].empty_neighbors(self.Matrix), expected_list)
 
     @patch('simulations.population.Population')
     @patch('random.randint')
@@ -163,54 +170,56 @@ class TestCell(unittest.TestCase):
             mock_new_pop (:obj:'mocked class'): Mocked instance of Population class
         """
 
+        max_pop_size = 1000
+
         # Testing that None is returned if 'mock_will_create' is False
         mock_weighted.return_value = 0
         mock_will_create.return_value = False
-        max_create_prob = 0  # Not relevant since mocked
-        max_pop_size = 100  # Not relevant since mocked
-        bot_prop = 1.0
+        Cell.max_create_prob = 0  # Not relevant since mocked
+        Cell.max_pop_size = 100  # Not relevant since mocked
+        Cell.bot_prop = 1.0
 
-        self.assertIs(self.Matrix[0][0].create_population(self.num_rows, self.num_cols, self.Matrix, max_create_prob, bot_prop, max_pop_size), None)
+        self.assertIs(self.Matrix[0][0].create_population(self.Matrix, max_pop_size), None)
 
         # Testing that None is returned if 'mock_will_create' is True but all adjacent cells contain populations (i.e. 'empty_neighbors' returns empty list)
         mock_weighted.return_value = 1.0
         mock_will_create.return_value = True
         mock_neighbors.return_value = []
-        max_create_prob = 1.0  # Not relevant since mocked
-        max_pop_size = 100  # Not relevant since mocked
-        bot_prop = 1.0
+        Cell.max_create_prob = 1.0  # Not relevant since mocked
+        Cell.max_pop_size = 100  # Not relevant since mocked
+        Cell.bot_prop = 1.0
 
-        self.assertIs(self.Matrix[0][0].create_population(self.num_rows, self.num_cols, self.Matrix, max_create_prob, bot_prop, max_pop_size), None)
+        self.assertIs(self.Matrix[0][0].create_population(self.Matrix, max_pop_size), None)
 
         # Testing that Exception is raised if the bottleneck proportion is 0
         mock_weighted.return_value = 1.0
         mock_will_create.return_value = True
         mock_neighbors.return_value = [(0, 2), (1, 1)]
         mock_random.return_value = 0
-        max_create_prob = 1.0  # Not relevant since mocked
-        max_pop_size = 100  # Not relevant since mocked
-        bot_prop = 0
+        Cell.max_create_prob = 1.0  # Not relevant since mocked
+        Cell.max_pop_size = 100  # Not relevant since mocked
+        Cell.bot_prop = 0
 
-        self.assertRaises(Exception, self.Matrix[0][0].create_population, self.num_rows, self.num_cols, self.Matrix, max_create_prob, bot_prop, max_pop_size)
+        self.assertRaises(Exception, self.Matrix[0][0].create_population, self.Matrix, max_pop_size)
 
         # Testing that a new population with correct size and loci is created in only one adjacent cell.
         mock_weighted.return_value = 1.0
         mock_will_create.return_value = True
         mock_neighbors.return_value = [(0, 2), (1, 1)]
         mock_random.return_value = 0
-        max_create_prob = 1.0  # Not relevant since mocked
-        max_pop_size = 100  # Not relevant since mocked
-        bot_prop = 0.2
+        Cell.max_create_prob = 1.0  # Not relevant since mocked
+        Cell.max_pop_size = 100  # Not relevant since mocked
+        Cell.bot_prop = 0.2
 
         self.Matrix[1][2].population.sample_population.side_effect = [(['A'] * 3) + (['a'] * 4), (['B'] * 4) + (['b'] * 3)]
 
-        new_size = int(math.ceil(bot_prop * self.Matrix[1][2].population.size))
+        new_size = int(math.ceil(Cell.bot_prop * self.Matrix[1][2].population.size))
         new_locus_A = (['A'] * 3) + (['a'] * 4)
         new_locus_B = (['B'] * 4) + (['b'] * 3)
 
         mock_new_pop.return_value = Population(new_size, new_locus_A, new_locus_B)
 
-        self.Matrix[1][2].create_population(self.num_rows, self.num_cols, self.Matrix, max_create_prob, bot_prop, max_pop_size)
+        self.Matrix[1][2].create_population(self.Matrix, max_pop_size)
 
         self.assertIs(self.Matrix[0][2].pop, True)
         self.assertIs(self.Matrix[1][1].pop, False)
@@ -224,43 +233,43 @@ class TestCell(unittest.TestCase):
         """Tests real_migration_rate method"""
 
         # Correctly returns migration rate from adjacent cell
-        max_mig_rate = 0.05
+        Cell.max_mig_rate = 0.05
         source_y = 0
         source_x = 0
-        self.assertEqual(self.Matrix[0][1].real_migration_rate(source_y, source_x, self.num_rows, self.num_cols, max_mig_rate), 0.0276)
+        self.assertEqual(self.Matrix[0][1].real_migration_rate(source_y, source_x), 0.0276)
 
         # Correactly returns 0 when maximum migration rate is 0
-        max_mig_rate = 0
-        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x, self.num_rows, self.num_cols, max_mig_rate), 0)
+        Cell.max_mig_rate = 0
+        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x), 0)
 
         # Correctly returns migration rate from non-adjacent cell
-        max_mig_rate = 0.05
+        Cell.max_mig_rate = 0.05
         source_y = 0
         source_x = 2
-        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x, self.num_rows, self.num_cols, max_mig_rate), 0.0053)
+        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x), 0.0053)
 
         # Correctly returns migration rate of 0 when cell is at maximum dtstance
-        max_mig_rate = 0.05
+        Cell.max_mig_rate = 0.05
         source_y = 1
         source_x = 2
-        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x, self.num_rows, self.num_cols, max_mig_rate), 0)
+        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x), 0)
 
     def test_real_K(self):
         """Tests real_K function"""
 
         # Correctly return carrying capacity for all cells with populations defined in setUp
-        min_K = 10
-        max_K = 1000
-        self.assertEqual(self.Matrix[0][0].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
-        self.assertEqual(self.Matrix[1][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 10)
-        self.assertEqual(self.Matrix[0][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 115)
+        Cell.min_K = 10
+        Cell.max_K = 1000
+        self.assertEqual(self.Matrix[0][0].real_K(), 1000)
+        self.assertEqual(self.Matrix[1][2].real_K(), 10)
+        self.assertEqual(self.Matrix[0][2].real_K(), 115)
 
         # Correctly returns carrying capacity when K is not set to vary
-        min_K = 1000
-        max_K = 1000
-        self.assertEqual(self.Matrix[0][0].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
-        self.assertEqual(self.Matrix[1][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
-        self.assertEqual(self.Matrix[0][2].real_K(self.num_rows, self.num_cols, min_K, max_K), 1000)
+        Cell.min_K = 1000
+        Cell.max_K = 1000
+        self.assertEqual(self.Matrix[0][0].real_K(), 1000)
+        self.assertEqual(self.Matrix[1][2].real_K(), 1000)
+        self.assertEqual(self.Matrix[0][2].real_K(), 1000)
 
     @patch('simulations.cell.Cell.real_migration_rate')
     def test_source_population_info(self, mock_real):
@@ -270,16 +279,16 @@ class TestCell(unittest.TestCase):
             mock_real (:onj:'Mocked method'): Mocked real_migration_rate method
         """
 
-        pop_list = [(i, j) for j in range(self.num_cols) for i in range(self.num_rows) if self.Matrix[i][j].pop]
+        pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if self.Matrix[i][j].pop]
 
-        max_mig_rate = 0.05
+        Cell.max_mig_rate = 0.05
 
         mock_real.side_effect = [0.0276, 0.0]
         self.Matrix[0][1].population.allele_freq.side_effect = [0.7059, 0.1176]
         self.Matrix[1][2].population.allele_freq.side_effect = [0, 0.6875]
 
         # Correctly returns all 4 lists with weighted values
-        self.assertTupleEqual(self.Matrix[0][0].source_population_info(pop_list, self.Matrix, self.num_rows, self.num_cols, max_mig_rate), ([0.0276, 0.0], [0.7059, 0], [0.1176, 0.6875], [17, 32]))
+        self.assertTupleEqual(self.Matrix[0][0].source_population_info(pop_list, self.Matrix), ([0.0276, 0.0], [0.7059, 0], [0.1176, 0.6875], [17, 32]))
 
     def test_weighting(self):
         """Tests weighting method"""
@@ -323,8 +332,8 @@ class TestCell(unittest.TestCase):
 
         self.assertEqual(self.Matrix[0][0].freq_after_migration(migration_weighted, allele_weighted, locus), 0.5)
 
+
 if __name__ == '__main__':
     unittest.main()
-
 
 

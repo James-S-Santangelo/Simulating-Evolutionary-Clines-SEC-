@@ -1,26 +1,13 @@
 import os
 from datetime import datetime
 import csv
-import math
 
 from simulations.cell import Cell
 from simulations.population import Population
 from simulations import functions
 
-pA = 0.5
-pB = 0.5
-qA = 1 - pA
-qB = 1 - pB
-"""float: Frequency of 'A', 'B', 'a', and 'b' alleles"""
-
 steps = 50
 """int: Number of generations"""
-
-N = 1000
-"""int: Size of starting population."""
-
-sims = 1
-"""int: Number of simulations"""
 
 max_mig_rate = 0.0
 """float: Maximum migration rate between any two populations"""
@@ -55,6 +42,10 @@ def simulate():
     Returns:
         None
     """
+
+    sims = 1
+    """int: Number of simulations"""
+
     print os.getpid()
 
     os.chdir(export_path)
@@ -72,6 +63,11 @@ def simulate():
 
             results = []
 
+            N = 1000
+            pA = 0.5
+            pB = 0.5
+            qA = 1 - pA
+            qB = 1 - pB
             locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))
             locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
 
