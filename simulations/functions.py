@@ -82,7 +82,7 @@ def choice(possibilities, weights):
     return possibilities[idx]
 
 
-def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob, bot_prop, min_K, max_K, r, max_mig_rate):
+def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob, bot_prop, min_K, max_K, max_mig_rate):
     """Does all of the heavy lifting in simulations
 
     Uses most core functions and methods from other modules to excercise both within- and between population dynamics. This includes population growth, migration, selection, and population creation.
@@ -114,11 +114,11 @@ def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob
 
             i, j = pop[0], pop[1]
 
-            create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, r, mat_full, s, step, max_create_prob)
+            create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, mat_full, s, step, max_create_prob)
 
             K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
 
-            Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K, r)
+            Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K)
 
             pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[0]
             pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix, num_rows, num_cols, max_mig_rate)[1]
@@ -129,7 +129,7 @@ def cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_create_prob
             Matrix[i][j].create_population(num_rows, num_cols, Matrix, max_create_prob, bot_prop, K)
 
 
-def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, r, mat_full, s, step, max_create_prob):
+def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_K, max_K, bot_prop, mat_full, s, step, max_create_prob):
     """Appends all population statistics and global parameters to results list
 
         Args:
@@ -151,6 +151,8 @@ def create_results(results, Matrix, i, j, num_rows, num_cols, max_mig_rate, min_
     Returns:
         None: Appends them to results list.
     """
+    r = Matrix[0][0].population.r
+
     size = Matrix[i][j].population.size
     pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
     pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)

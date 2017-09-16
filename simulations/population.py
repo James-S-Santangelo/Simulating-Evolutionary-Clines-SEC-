@@ -7,6 +7,9 @@ from simulations import functions
 class Population(object):
     """Controls populations assigned to cells in the landscape matrix"""
 
+    r = math.log(1.5)
+    """r (float): Instantaneous rate of population increase"""
+
     def __init__(self, size, locus_A, locus_B):
         """Class constructor function
 
@@ -19,7 +22,7 @@ class Population(object):
         self.locus_A = locus_A
         self.locus_B = locus_B
 
-    def pop_growth(self, K, r):
+    def pop_growth(self, K):
         """Calculates new population size based on logistic growth model
 
         Args:
@@ -30,7 +33,7 @@ class Population(object):
             new_size (int): Rounded up new_size is less than or equal to K, rounded down otherwise.
         """
         K = float(K)
-        new_size = self.size * K / (self.size + (K - self.size) * math.exp(-r))
+        new_size = self.size * K / (self.size + (K - self.size) * math.exp(-self.r))
         if new_size <= K:
             return int(math.ceil(new_size))
         elif new_size > K:

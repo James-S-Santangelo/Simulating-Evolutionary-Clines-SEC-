@@ -42,9 +42,6 @@ Proportion of alleles sampled when new population is created
 max_p_create = 0
 """float: Maximum probability of creating a new population"""
 
-r = math.log(1.5)
-"""float: Instantaneous rate of population increase"""
-
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
 """str: Path to where dataset should be exported"""
 
@@ -82,7 +79,7 @@ def simulate():
             Matrix[0][0].pop = True
             Matrix[0][0].population = Population(N, locus_A, locus_B)
 
-            functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
+            functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, max_mig_rate)
 
             functions.write_to_csv(writer, results)
 

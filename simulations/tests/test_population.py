@@ -45,7 +45,7 @@ class TestPopulation(unittest.TestCase):
         """
 
         # Test that 3 inputs from parameterized.expand provide expected output.
-        self.assertEqual(self.pop.pop_growth(K, math.log(1.5)), expected)
+        self.assertEqual(self.pop.pop_growth(K), expected)
 
     def test_allele_freq(self):
         """Tests allele_freq method"""
