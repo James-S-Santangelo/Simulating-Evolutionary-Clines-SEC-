@@ -1,7 +1,6 @@
 import unittest
 from parameterized import parameterized
 from mock import patch
-import math
 
 from simulations import population
 

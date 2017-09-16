@@ -2,8 +2,6 @@ import sys
 import random
 import bisect
 
-from simulations.cell import Cell
-
 
 def matrix_full(Matrix):
     """Checks whether every every cell in landscape matrix contains a population
@@ -84,7 +82,7 @@ def choice(possibilities, weights):
     return possibilities[idx]
 
 
-def cline(s, results, steps, pA, pB, Matrix):
+def cline(s, results, steps, Matrix):
     """Does all of the heavy lifting in simulations
 
     Uses most core functions and methods from other modules to excercise both within- and between population dynamics. This includes population growth, migration, selection, and population creation.
@@ -100,6 +98,8 @@ def cline(s, results, steps, pA, pB, Matrix):
     Returns:
         None: Simply generates results and appends them to results list.
     """
+    from simulations.cell import Cell
+
     for step in range(steps):
 
         pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if Matrix[i][j].pop]
@@ -141,7 +141,10 @@ def create_results(results, Matrix, i, j, mat_full, s, step):
     Returns:
         None: Appends them to results list.
     """
-    r = Matrix[0][0].population.r
+    from simulations.cell import Cell
+    from simulations.population import Population
+
+    r = Population.r
     max_create_prob = Cell.max_create_prob
     bot_prop = Cell.bot_prop
     max_mig_rate = Cell.max_mig_rate

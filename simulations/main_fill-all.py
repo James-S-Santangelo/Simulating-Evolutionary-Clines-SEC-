@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import csv
-import math
+import sys
 
 from simulations.cell import Cell
 from simulations.population import Population
@@ -9,41 +9,10 @@ from simulations import functions
 
 pA = 0.5
 pB = 0.5
-qA = 1 - pA
-qB = 1 - pB
 """float: Frequency of 'A', 'B', 'a', and 'b' alleles"""
 
 steps = 50
 """int: Number of generations"""
-
-N = 1000
-"""int: Size of starting population."""
-
-sims = 1
-"""int: Number of simulations"""
-
-max_mig_rate = 0.0
-"""float: Maximum migration rate between any two populations"""
-
-max_K = 1000
-min_K = 10
-"""int: Maximum and minimum carying capacity of cells across the matrix"""
-
-num_rows = 1
-num_cols = 5
-"""int: Number of rows and number of columns in landscape matrix"""
-
-bot_prop = 1.0
-"""float: Bottleneck proportion
-
-Proportion of alleles sampled when new population is created
-"""
-
-max_p_create = 0
-"""float: Maximum probability of creating a new population"""
-
-r = math.log(1.5)
-"""float: Instantaneous rate of population increase"""
 
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
 """str: Path to where dataset should be exported"""
@@ -58,6 +27,10 @@ def simulate():
     Returns:
         None
     """
+
+    sims = 1
+    """int: Number of simulations"""
+
     print os.getpid()
 
     os.chdir(export_path)
@@ -75,16 +48,18 @@ def simulate():
 
             results = []
 
-            Matrix = Cell.initialize_matrix(num_cols, num_rows)
-            for i in range(num_rows):
-                for j in range(num_cols):
+            Matrix = Cell.initialize_matrix()
+            qA = 1 - pA
+            qB = 1 - pB
+            for i in range(Cell.num_rows):
+                for j in range(Cell.num_cols):
                     Matrix[i][j].pop = True
-                    K = Matrix[i][j].real_K(num_rows, num_cols, min_K, max_K)
+                    K = Matrix[i][j].real_K()
                     locus_A = (['A'] * int(K * pA)) + (['a'] * int(round(K * qA)))
                     locus_B = (['B'] * int(K * pB)) + (['b'] * int(round(K * qB)))
                     Matrix[i][j].population = Population(K, locus_A, locus_B)
 
-            functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, r, max_mig_rate)
+            functions.cline(s, results, steps, Matrix)
 
             functions.write_to_csv(writer, results)
 

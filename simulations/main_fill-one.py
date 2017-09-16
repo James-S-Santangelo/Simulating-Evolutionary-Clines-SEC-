@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import csv
+import sys
 
 from simulations.cell import Cell
 from simulations.population import Population
@@ -8,6 +9,9 @@ from simulations import functions
 
 steps = 50
 """int: Number of generations"""
+
+pA = 0.5
+pB = 0.5
 
 export_path = "/Users/jamessantangelo/Desktop/CSV/"
 """str: Path to where dataset should be exported"""
@@ -44,18 +48,16 @@ def simulate():
             results = []
 
             N = 1000
-            pA = 0.5
-            pB = 0.5
             qA = 1 - pA
             qB = 1 - pB
             locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))
             locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
 
-            Matrix = Cell.initialize_matrix(num_cols, num_rows)
+            Matrix = Cell.initialize_matrix()
             Matrix[0][0].pop = True
             Matrix[0][0].population = Population(N, locus_A, locus_B)
 
-            functions.cline(s, results, num_rows, num_cols, steps, pA, pB, Matrix, max_p_create, bot_prop, min_K, max_K, max_mig_rate)
+            functions.cline(s, results, steps, Matrix)
 
             functions.write_to_csv(writer, results)
 

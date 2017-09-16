@@ -1,31 +1,32 @@
 import math
 import random
+import sys
 
-from simulations.population import Population
-from simulations.functions import choice
+from simulations import population
+from simulations import functions
 
 
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = 0.0
+    max_mig_rate = float(sys.argv[1])
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 1000
+    min_K = 10
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
     num_cols = 5
     """int: Number of rows and number of columns in landscape matrix"""
 
-    bot_prop = 1.0
+    bot_prop = 0.3
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created
     """
 
-    max_create_prob = 0
+    max_create_prob = 0.2
     """float: Maximum probability of creating a new population"""
 
     def __init__(self, i, j, pop):
@@ -97,7 +98,7 @@ class Cell(object):
         possibilities = '10'
         weighted_create_prob = float(weighted_create_prob)
         weights = [weighted_create_prob, (1 - weighted_create_prob)]
-        will_create = choice(possibilities, weights)
+        will_create = functions.choice(possibilities, weights)
         if will_create == '1':
             return True
         else:
@@ -177,7 +178,7 @@ class Cell(object):
                     new_size = int(math.ceil(Cell.bot_prop * self.population.size))
                     new_locus_A = self.population.sample_population(self.population.locus_A, new_size)
                     new_locus_B = self.population.sample_population(self.population.locus_B, new_size)
-                    Matrix[i][j].population = Population(new_size, new_locus_A, new_locus_B)
+                    Matrix[i][j].population = population.Population(new_size, new_locus_A, new_locus_B)
             else:
                 return None
         else:

@@ -1,7 +1,7 @@
 import math
 import random
 
-from simulations.functions import choice
+from simulations import functions
 
 
 class Population(object):
@@ -101,5 +101,5 @@ class Population(object):
         """
         num_of_items = self.size
         weights = [allele_freq, (1 - allele_freq)]
-        new_locus = [choice(possibilities, weights) for i in range(num_of_items)]
+        new_locus = [functions.choice(possibilities, weights) for i in range(num_of_items)]
         return new_locus
