@@ -9,24 +9,24 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = 0.1
+    max_mig_rate = 0.2
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 10
+    min_K = 1000
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 5
+    num_cols = 10
     """int: Number of rows and number of columns in landscape matrix"""
 
-    bot_prop = 0.3
+    bot_prop = 0.1
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created
     """
 
-    max_create_prob = 0.2
+    max_create_prob = 1.0
     """float: Maximum probability of creating a new population"""
 
     def __init__(self, i, j, pop):

@@ -21,6 +21,9 @@ def simulate():
     sims = 1
     """int: Number of simulations"""
 
+    steps = 50
+    """int: Number of generations"""
+
     export_path = "/Users/jamessantangelo/Desktop/CSV/"
     """str: Path to where dataset should be exported"""
 

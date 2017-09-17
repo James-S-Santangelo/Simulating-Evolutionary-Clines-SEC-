@@ -101,35 +101,44 @@ def cline(s, results, steps, Matrix):
 
     from simulations.cell import Cell
 
-    steps = 50
-    """int: Number of generations"""
+    step_counter = 0
 
-    for step in range(steps):
-
+    while matrix_full(Matrix) == 0:
         pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if Matrix[i][j].pop]
 
-        mat_full = matrix_full(Matrix)
+        step_counter += 1
 
         for pop in pop_list:
-
             i, j = pop[0], pop[1]
-
-            create_results(results, Matrix, i, j, mat_full, s, step)
-
+            create_results(results, Matrix, i, j, s, step_counter)
             K = Matrix[i][j].real_K()
-
             Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K)
-
             pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[0]
             pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[1]
-
             Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, 'Aa')
             Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, 'Bb')
-
             Matrix[i][j].create_population(Matrix, K)
 
+    else:
 
-def create_results(results, Matrix, i, j, mat_full, s, step):
+        for step in range(steps):
+
+            pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if Matrix[i][j].pop]
+
+            step_counter += 1
+
+            for pop in pop_list:
+                i, j = pop[0], pop[1]
+                create_results(results, Matrix, i, j, s, step_counter)
+                K = Matrix[i][j].real_K()
+                Matrix[i][j].population.size = Matrix[i][j].population.pop_growth(K)
+                pA1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[0]
+                pB1 = Matrix[i][j].alleles_next_gen(pop_list, Matrix)[1]
+                Matrix[i][j].population.locus_A = Matrix[i][j].population.sample_alleles(pA1, 'Aa')
+                Matrix[i][j].population.locus_B = Matrix[i][j].population.sample_alleles(pB1, 'Bb')
+
+
+def create_results(results, Matrix, i, j, s, step_counter):
     """Appends all population statistics and global parameters to results list
 
         Args:
@@ -140,7 +149,7 @@ def create_results(results, Matrix, i, j, mat_full, s, step):
         mat_full (int): 1 if matrix is full, 0 if there are sill empty cells.
         (float): frequency of 'A' allele
         s (int): current iteration of simulations
-        step (int): current generation
+        step_counter (int): current generation
 
     Returns:
         None: Appends them to results list.
@@ -155,13 +164,14 @@ def create_results(results, Matrix, i, j, mat_full, s, step):
     min_K = Cell.min_K
     max_K = Cell.max_K
 
+    mat_full = matrix_full(Matrix)
     size = Matrix[i][j].population.size
     pA = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_A)
     pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
     phen = Matrix[i][j].population.phenotype(pA, pB)
     K = Matrix[i][j].real_K()
 
-    results.append([s, i, j, step, round(pA, 3), round(pB, 3),
+    results.append([s, i, j, step_counter, round(pA, 3), round(pB, 3),
                     round(phen, 3), max_create_prob, K, round(r, 3),
                     bot_prop, max_mig_rate, mat_full, size, min_K, max_K])
 
