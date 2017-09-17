@@ -18,21 +18,23 @@ def simulate():
         None
     """
 
-    sims = 1
+    sims = 1000
     """int: Number of simulations"""
 
-    steps = 50
+    steps = 500
     """int: Number of generations"""
 
-    export_path = "/Users/jamessantangelo/Desktop/CSV/"
+    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary"
     """str: Path to where dataset should be exported"""
+
+
 
     print os.getpid()
 
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "Drift.Migration_OneFill(pA%.2f)(pB%.2f).csv" % (Population.pA, Population.pB), "wb") as f:
+    with open(datestring + "_Drift.Migration_OneFill(m%.4f)(bot%.4f).csv" % (float(Cell.max_mig_rate), float(Cell.bot_prop)), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
@@ -45,8 +47,8 @@ def simulate():
             results = []
 
             N = 1000
-            pA = Population.pA
-            pB = Population.pB
+            pA = float(Population.pA)
+            pB = float(Population.pB)
             qA = 1 - pA
             qB = 1 - pB
             locus_A = (['A'] * int(N * pA)) + (['a'] * int(round(N * qA)))

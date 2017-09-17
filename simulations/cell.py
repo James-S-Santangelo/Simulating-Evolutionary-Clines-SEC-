@@ -9,7 +9,7 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = 0.2
+    max_mig_rate = sys.argv[1]
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
@@ -17,10 +17,10 @@ class Cell(object):
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 10
+    num_cols = 40
     """int: Number of rows and number of columns in landscape matrix"""
 
-    bot_prop = 0.1
+    bot_prop = sys.argv[2]
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created
@@ -164,6 +164,7 @@ class Cell(object):
         """
         weighted_create_prob = self.weight_create_prob(max_pop_size)
         will_create = self.will_create(weighted_create_prob)
+        Cell.bot_prop = float(Cell.bot_prop)
 
         if will_create:
             empty_neighbors = self.empty_neighbors(Matrix)
@@ -197,6 +198,7 @@ class Cell(object):
         Returns:
             mig_prop (float): Proportion of alleles migrating between focal and source population.
         """
+        Cell.max_mig_rate = float(Cell.max_mig_rate)
         dist = (((source_y - self.i) ** 2) + ((source_x - self.j) ** 2)) ** (0.5)
         max_i = Cell.num_rows - 1
         max_j = Cell.num_cols - 1

@@ -45,8 +45,8 @@ def simulate():
             results = []
 
             Matrix = Cell.initialize_matrix()
-            pA = Population.pA
-            pB = Population.pB
+            pA = float(Population.pA)
+            pB = float(Population.pB)
             qA = 1 - pA
             qB = 1 - pB
             for i in range(Cell.num_rows):

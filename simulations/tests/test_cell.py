@@ -202,7 +202,7 @@ class TestCell(unittest.TestCase):
 
         self.assertRaises(Exception, self.Matrix[0][0].create_population, self.Matrix, max_pop_size)
 
-        # Testing that a new population with correct size and loci is created in only one adjacent cell.
+        # Testing that a new population with correct size and loci is created in only one adjacent cell. Also tests conversion of string to float.
         mock_weighted.return_value = 1.0
         mock_will_create.return_value = True
         mock_neighbors.return_value = [(0, 2), (1, 1)]
@@ -219,6 +219,7 @@ class TestCell(unittest.TestCase):
 
         mock_new_pop.return_value = Population(new_size, new_locus_A, new_locus_B)
 
+        Cell.bot_prop = "0.2"
         self.Matrix[1][2].create_population(self.Matrix, max_pop_size)
 
         self.assertIs(self.Matrix[0][2].pop, True)
@@ -228,6 +229,7 @@ class TestCell(unittest.TestCase):
         self.assertEqual(self.Matrix[0][2].population.size, 7)
         self.assertListEqual(self.Matrix[0][2].population.locus_A, (['A'] * 3) + (['a'] * 4))
         self.assertListEqual(self.Matrix[0][2].population.locus_B, (['B'] * 4) + (['b'] * 3))
+        assert isinstance(Cell.bot_prop, float)
 
     def test_real_migration_rate(self):
         """Tests real_migration_rate method"""
@@ -253,6 +255,13 @@ class TestCell(unittest.TestCase):
         source_y = 1
         source_x = 2
         self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x), 0)
+
+        # Correctly converts values supplied as strings to float
+        Cell.max_mig_rate = "0.05"
+        source_y = 1
+        source_x = 2
+        self.assertEqual(self.Matrix[0][0].real_migration_rate(source_y, source_x), 0)
+        assert isinstance(Cell.max_mig_rate, float)
 
     def test_real_K(self):
         """Tests real_K function"""
