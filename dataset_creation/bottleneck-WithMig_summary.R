@@ -82,8 +82,10 @@ SlopeSum_Gen <- merged %>%
             se_Neg = sqrt((prop_sigNeg*(1 - prop_sigNeg)/length(estimate))),
             ci.lower.Neg = 1.96*se_Neg,
             ci.upper.Neg = 1.96*se_Neg)
-  
 
+
+#Write dataset with summary info to csv
+fwrite(SlopeSum_Gen, file = paste(today, "SlopeSum_Gen", sep = "_"), sep = ",", col.names = TRUE)
 
 
 
