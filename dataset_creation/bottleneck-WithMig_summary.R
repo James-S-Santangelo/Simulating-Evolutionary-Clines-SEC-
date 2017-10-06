@@ -3,20 +3,20 @@
 ###############
 
 #Load required packages
-library(Rmisc)
-library(dplyr)
-library(data.table)
-library(broom)
-
 # library(Rmisc)
-# library(dplyr, lib = "~/Rpackages")
-# library(data.table, lib = "~/Rpackages")
+# library(dplyr)
+# library(data.table)
 # library(broom)
+
+library(Rmisc, lib = "~/Rpackages")
+library(dplyr)
+library(data.table, lib = "~/Rpackages")
+library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-setwd("/Users/jamessantangelo/Desktop/CSV")
-# setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
+# setwd("/Users/jamessantangelo/Desktop/CSV")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 # # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
