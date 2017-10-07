@@ -9,7 +9,7 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = sys.argv[1]
+    max_mig_rate = 0
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
@@ -20,7 +20,7 @@ class Cell(object):
     num_cols = 5
     """int: Number of rows and number of columns in landscape matrix"""
 
-    bot_prop = sys.argv[2]
+    bot_prop = 1.0
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created

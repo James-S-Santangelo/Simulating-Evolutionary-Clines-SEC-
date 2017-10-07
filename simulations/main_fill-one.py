@@ -24,7 +24,7 @@ def simulate():
     steps = 15
     """int: Number of generations"""
 
-    export_path = "/Users/jamessantangelo/Desktop/CSV"
+    export_path = "/Users/jamessantangelo/Desktop/CSV/AlleleFreq"
     """str: Path to where dataset should be exported"""
 
 
@@ -34,7 +34,7 @@ def simulate():
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "_Drift.Migration_OneFill(m%.4f)(bot%.4f).csv" % (float(Cell.max_mig_rate), float(Cell.bot_prop)), "wb") as f:
+    with open(datestring + "_AlleleFreq_OneFill(pA%.2f)(pB%.2f).csv" % (float(Population.pA), float(Population.pB)), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
