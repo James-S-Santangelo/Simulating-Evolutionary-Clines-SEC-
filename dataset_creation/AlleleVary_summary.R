@@ -67,10 +67,11 @@ for (i in 1:length(args1)){
       filter(term == "Distance") %>%
       select(estimate, p.value)
 
-    merge_lm[[i]] <- dataset_lm
+    # print(head(dataset_lm))
+    dataset <- paste("Dataset", i, j, sep="")
+    merge_lm[[dataset]] <- dataset_lm
   }
 }
-
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "FitSimCoef_AlleleFreq-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
