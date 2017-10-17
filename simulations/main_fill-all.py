@@ -18,13 +18,13 @@ def simulate():
         None
     """
 
-    sims = 1
+    sims = 1000
     """int: Number of simulations"""
 
-    steps = 50
+    steps = 250
     """int: Number of generations"""
 
-    export_path = "/Users/jamessantangelo/Desktop/CSV/"
+    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/AlleleFreq_Vary/all-fill/"
     """str: Path to where dataset should be exported"""
 
     print os.getpid()
@@ -32,7 +32,7 @@ def simulate():
     os.chdir(export_path)
     datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open(datestring + "Drift.Migration_AllFill(pA%.2f)(pB%.2f).csv" % (Population.pA, Population.pB), "wb") as f:
+    with open(datestring + "_" +"AlleleFreqVary_AllFill(pA%.2f)(pB%.2f).csv" % (Population.pA, Population.pB), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
