@@ -17,7 +17,7 @@ class Cell(object):
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 50
+    num_cols = 15
     """int: Number of rows and number of columns in landscape matrix"""
 
     bot_prop = 1.0
@@ -395,7 +395,7 @@ class Cell(object):
 
         return round(pA1, 6), round(pB1, 6), round(D, 6)
 
-    def freq_after_migration(self, migration_weighted, allele_weighted, locus):
+    def freq_after_migration(self, migration_weighted, allele_weighted, allele_freq):
         """Calculates the frequency of an allele following migration
 
         Args:
@@ -406,7 +406,7 @@ class Cell(object):
         Returns:
             p_1 (float): Frequency of allele following migration
         """
-        p_0 = self.population.allele_freq(locus)
+        p_0 = allele_freq
         p_1 = ((1 - migration_weighted) * p_0) + (migration_weighted * allele_weighted)
 
         if p_1 < 0:
@@ -436,7 +436,10 @@ class Cell(object):
         allele_weighted_A = self.weighting(allele_weighted_A_list, weighting_factor_list)
         allele_weighted_B = self.weighting(allele_weighted_B_list, weighting_factor_list)
 
-        pA1 = self.freq_after_migration(migration_weighted, allele_weighted_A, self.population.locus_A)
-        pB1 = self.freq_after_migration(migration_weighted, allele_weighted_B, self.population.locus_B)
+        pA_after_sel = self.freq_after_selection()[0]
+        pB_after_sel = self.freq_after_selection()[1]
+
+        pA1 = self.freq_after_migration(migration_weighted, allele_weighted_A, pA_after_sel)
+        pB1 = self.freq_after_migration(migration_weighted, allele_weighted_B, pB_after_sel)
 
         return pA1, pB1

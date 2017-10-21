@@ -38,8 +38,7 @@ def simulate():
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
-                         "Pop_size",
-                         "min_K", "max_K"])
+                         "Pop_size", "min_K", "max_K", "max_s", "s"])
 
         functions.print_progress(0, sims, prefix='', suffix='', decimals=1, bar_length=100)
         for s in range(sims):

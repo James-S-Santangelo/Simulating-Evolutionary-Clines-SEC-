@@ -365,20 +365,35 @@ class TestCell(unittest.TestCase):
         """Tests freq_after_migration method"""
 
         # Correctly returns new allele frequency of mock_pop_2 based on migration from other populations
-        self.Matrix[0][1].population.allele_freq.return_value = 0.1176
         migration_weighted = 0.0206
         allele_weighted = 0.6429
-        locus = self.Matrix[0][1].population.locus_B
+        allele_freq = 0.1176
 
-        self.assertEqual(self.Matrix[0][1].freq_after_migration(migration_weighted, allele_weighted, locus), 0.1284)
+        self.assertEqual(self.Matrix[0][1].freq_after_migration(migration_weighted, allele_weighted, allele_freq), 0.1284)
 
         # Correctly returns new allele frequency of mock_pop_1 as current frequency if there is no migration.
-        self.Matrix[0][0].population.allele_freq.return_value = 0.5
         migration_weighted = 0
         allele_weighted = 0.4898
-        locus = self.Matrix[0][0].population.locus_A
+        locus = 0.5
 
         self.assertEqual(self.Matrix[0][0].freq_after_migration(migration_weighted, allele_weighted, locus), 0.5)
+
+    # @patch('simulations.cell.Cell.freq_after_migration')
+    # @patch('simulations.cell.Cell.freq_after_selection')
+    # @patch('simulations.cell.Cell.weighting')
+    # @patch('simulations.cell.Cell.source_population_info')
+    # def test_alleles_next_gen(self, mock_source_info, mock_weight, mock_sel, mock_mig):
+
+    #     pop_list = [(i, j) for j in range(Cell.num_cols) for i in range(Cell.num_rows) if self.Matrix[i][j].pop]
+
+    #     Cell.max_s = 0.01
+
+    #     mock_source_info.side_effect = [[10, 32], [0.0184, 0.0], [0.5, 0], [0.5, 0.6875]]
+    #     mock_weight.side_effect = [0.0044, 0.1190, 0.6429]
+    #     mock_sel.side_effect = [0.705765, 0.116762]
+    #     mock_mig.side_effect = [0.7032, 0.1191]
+
+    #     self.assertTupleEqual(self.Matrix[0][1].alleles_next_gen(pop_list, self.Matrix), mock_mig.side_effect)
 
 
 if __name__ == '__main__':

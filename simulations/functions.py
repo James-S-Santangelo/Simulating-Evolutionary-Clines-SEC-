@@ -163,6 +163,7 @@ def create_results(results, Matrix, i, j, s, step_counter):
     max_mig_rate = Cell.max_mig_rate
     min_K = Cell.min_K
     max_K = Cell.max_K
+    max_s = Cell.max_s
 
     mat_full = matrix_full(Matrix)
     size = Matrix[i][j].population.size
@@ -170,10 +171,12 @@ def create_results(results, Matrix, i, j, s, step_counter):
     pB = Matrix[i][j].population.allele_freq(Matrix[i][j].population.locus_B)
     phen = Matrix[i][j].population.phenotype(pA, pB)
     K = Matrix[i][j].real_K()
+    sel = Matrix[i][j].real_s()
 
     results.append([s, i, j, step_counter, round(pA, 3), round(pB, 3),
                     round(phen, 3), max_create_prob, K, round(r, 3),
-                    bot_prop, max_mig_rate, mat_full, size, min_K, max_K])
+                    bot_prop, max_mig_rate, mat_full, size, min_K, max_K,
+                    max_s, sel])
 
 
 def write_to_csv(writer, results):
@@ -188,4 +191,4 @@ def write_to_csv(writer, results):
     """
     for z in results:
 
-        writer.writerow([z[0], z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12], z[13], z[14], z[15]])
+        writer.writerow([z[0], z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8], z[9], z[10], z[11], z[12], z[13], z[14], z[15], z[16], z[17]])
