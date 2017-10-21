@@ -237,6 +237,17 @@ class Cell(object):
         return int(math.ceil(K))
 
     def real_s(self):
+        """Calculates selection coefficient of cells in the matrix
+
+        Calculates the relized selection coefficient of cells in the matrix, which declines linearly with increasing distance from the first
+        initialized landscape cell.
+
+        Args:
+            None
+
+        returns:
+            K (float): Realized selection coefficient of landscape matrix cell.
+        """
         start_y = 0
         start_x = 0
         dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)

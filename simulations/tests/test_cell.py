@@ -284,7 +284,7 @@ class TestCell(unittest.TestCase):
     def test_real_s(self):
         """Tests real_s function"""
 
-        # Correctly return carrying capacity for all cells with populations defined in setUp
+        # Correctly return selection coefficient for all cells with populations defined in setUp
         Cell.max_s = 0.001
         self.assertEqual(self.Matrix[0][0].real_s(), 0)
         self.assertEqual(self.Matrix[1][2].real_s(), 0.001)
