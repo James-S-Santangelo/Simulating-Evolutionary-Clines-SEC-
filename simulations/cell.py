@@ -29,6 +29,9 @@ class Cell(object):
     max_create_prob = 1.0
     """float: Maximum probability of creating a new population"""
 
+    max_s = 0.001
+    """float: Maximum strength of selection acting against the cyanogenic phenotype"""
+
     def __init__(self, i, j, pop):
         """Class constructor function
 
@@ -232,6 +235,17 @@ class Cell(object):
         slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
         K = Cell.max_K + slope_K * dist
         return int(math.ceil(K))
+
+    def real_s(self):
+        start_y = 0
+        start_x = 0
+        dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
+        max_i = Cell.num_rows - 1
+        max_j = Cell.num_cols - 1
+        max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
+        slope_s = (Cell.max_s - 0) / (max_dist - 0)
+        s = slope_s * dist
+        return round(s, 5)
 
     def source_population_info(self, pop_list, Matrix):
         """Collects migration, allele frequency, and population size info from all source populations

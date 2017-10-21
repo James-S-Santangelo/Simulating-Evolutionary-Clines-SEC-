@@ -271,14 +271,25 @@ class TestCell(unittest.TestCase):
         Cell.max_K = 1000
         self.assertEqual(self.Matrix[0][0].real_K(), 1000)
         self.assertEqual(self.Matrix[1][2].real_K(), 10)
-        self.assertEqual(self.Matrix[0][2].real_K(), 115)
+        self.assertEqual(self.Matrix[0][1].real_K(), 558)
 
         # Correctly returns carrying capacity when K is not set to vary
         Cell.min_K = 1000
         Cell.max_K = 1000
         self.assertEqual(self.Matrix[0][0].real_K(), 1000)
         self.assertEqual(self.Matrix[1][2].real_K(), 1000)
-        self.assertEqual(self.Matrix[0][2].real_K(), 1000)
+        self.assertEqual(self.Matrix[0][1].real_K(), 1000)
+
+
+    def test_real_s(self):
+        """Tests real_s function"""
+
+        # Correctly return carrying capacity for all cells with populations defined in setUp
+        Cell.max_s = 0.001
+        self.assertEqual(self.Matrix[0][0].real_s(), 0)
+        self.assertEqual(self.Matrix[1][2].real_s(), 0.001)
+        self.assertEqual(self.Matrix[0][1].real_s(), 0.00045)
+
 
     @patch('simulations.cell.Cell.real_migration_rate')
     def test_source_population_info(self, mock_real):
