@@ -248,6 +248,7 @@ class Cell(object):
         returns:
             K (float): Realized selection coefficient of landscape matrix cell.
         """
+        Cell.max_s = float(Cell.max_s)
         start_y = 0
         start_x = 0
         dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
