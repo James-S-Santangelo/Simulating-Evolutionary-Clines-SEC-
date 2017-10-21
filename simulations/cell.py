@@ -313,6 +313,88 @@ class Cell(object):
         value_weighted = sum(values_list[i] * factor_list[i] / sum(factor_list) for i in range(len(values_list)))
         return round(value_weighted, 4)
 
+    def freq_after_selection(self):
+        """Calculates frequency of alleles following selection
+
+        Uses two-locus selection model to calculate the frequency of both dominant alleles the following generation. Also calculates linkage disequilibrium.
+
+        Args:
+            None
+
+        Returns:
+            pA1 (float): Frequency of 'A' allele the next generation
+            pB1 (float): Frequency of 'B' allele the next generation
+            D (float): Linkage disequilibrium between 'A' and 'B' loci.
+        """
+
+        pA = self.population.allele_freq(self.population.locus_A)
+        pB = self.population.allele_freq(self.population.locus_B)
+
+        qA = 1 - pA
+        qB = 1 - pB
+
+        s = self.real_s()
+        rec = 0.5
+        # h = 0
+
+        Gametes = {'AB': pA * pB,
+                   'Ab': pA * qB,
+                   'aB': qA * pB,
+                   'ab': qA * qB}
+
+        D = (Gametes['AB'] * Gametes['ab']) - (Gametes['Ab'] * Gametes['aB'])
+
+        Genotypes = {'AB_AB': [Gametes['AB'] ** 2, 1 - s],
+
+                     'AB_Ab': [Gametes['AB'] * Gametes['Ab'], 1 - s],
+                     'Ab_AB': [Gametes['AB'] * Gametes['Ab'], 1 - s],
+
+                     'AB_aB': [Gametes['AB'] * Gametes['aB'], 1 - s],
+                     'aB_AB': [Gametes['AB'] * Gametes['aB'], 1 - s],
+
+                     'AB_ab': [Gametes['AB'] * Gametes['ab'], 1 - s],
+                     'ab_AB': [Gametes['AB'] * Gametes['ab'], 1 - s],
+
+                     'Ab_Ab': [Gametes['Ab'] ** 2, 1],
+
+                     'Ab_aB': [Gametes['Ab'] * Gametes['aB'], 1 - s],
+                     'aB_Ab': [Gametes['Ab'] * Gametes['aB'], 1 - s],
+
+                     'Ab_ab': [Gametes['Ab'] * Gametes['ab'], 1],
+                     'ab_Ab': [Gametes['Ab'] * Gametes['ab'], 1],
+
+                     'aB_aB': [Gametes['aB'] ** 2, 1],
+
+                     'aB_ab': [Gametes['aB'] * Gametes['ab'], 1],
+                     'ab_aB': [Gametes['aB'] * Gametes['ab'], 1],
+
+                     'ab_ab': [Gametes['ab'] ** 2, 1]}
+
+        marg_fit = {'{0}'.format(key1): [] for key1 in Gametes.keys()}
+        for i in Gametes.keys():
+            for j in Genotypes.keys():
+                if i == j.split("_")[0]:
+                    marg_fit[i].append(Genotypes[j][1] * Gametes[j.split("_")[1]])
+        for i, v in marg_fit.items():
+            marg_fit[i] = sum(v)
+
+        mean_fit = []
+        for i1, v1 in Gametes.items():
+            for i2, v2 in Gametes.items():
+                con = '{0}_{1}'.format(i1, i2)
+                mean_fit.append(v1 * v2 * Genotypes[con][1])
+        mean_fit = sum(mean_fit)
+
+        AB1 = (Gametes['AB'] * (marg_fit['AB'] / mean_fit)) - (rec * D * (Genotypes['AB_ab'][1] / mean_fit))
+        Ab1 = (Gametes['Ab'] * (marg_fit['Ab'] / mean_fit)) + (rec * D * (Genotypes['AB_ab'][1] / mean_fit))
+        aB1 = (Gametes['aB'] * (marg_fit['aB'] / mean_fit)) + (rec * D * (Genotypes['AB_ab'][1] / mean_fit))
+        ab1 = (Gametes['ab'] * (marg_fit['ab'] / mean_fit)) - (rec * D * (Genotypes['AB_ab'][1] / mean_fit))
+
+        pA1 = AB1 + Ab1
+        pB1 = AB1 + aB1
+
+        return round(pA1, 6), round(pB1, 6), round(D, 6)
+
     def freq_after_migration(self, migration_weighted, allele_weighted, locus):
         """Calculates the frequency of an allele following migration
 

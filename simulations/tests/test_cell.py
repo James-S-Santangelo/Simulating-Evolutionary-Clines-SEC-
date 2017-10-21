@@ -333,6 +333,34 @@ class TestCell(unittest.TestCase):
         factors_list = [17, 32]
         self.assertEqual(self.Matrix[0][0].weighting(values_list, factors_list), 0.0096)
 
+    @patch('simulations.cell.Cell.real_s')
+    def test_freq_after_selection(self, mock_s):
+        """Tests freq_after_selection method"""
+
+        # Correctly return allale freuencies following weak selection
+        self.Matrix[0][1].population.allele_freq.side_effect = [0.7059, 0.1176]
+        Cell.max_s = 0.001
+
+        mock_s.return_value = 0.00045
+
+        self.assertTupleEqual(self.Matrix[0][1].freq_after_selection(), (0.705894, 0.117562, 0))
+
+        # Correctly returns same allele frequencies when no selection
+        self.Matrix[0][1].population.allele_freq.side_effect = [0.7059, 0.1176]
+        Cell.max_s = 0.001
+
+        mock_s.return_value = 0.0
+
+        self.assertTupleEqual(self.Matrix[0][1].freq_after_selection(), (0.7059, 0.1176, 0))
+
+        # Correclty return allele frequencies when selection is strong
+        self.Matrix[0][1].population.allele_freq.side_effect = [0.7059, 0.1176]
+        Cell.max_s = 0.01
+
+        mock_s.return_value = 0.01
+
+        self.assertTupleEqual(self.Matrix[0][1].freq_after_selection(), (0.705765, 0.116762, 0))
+
     def test_freq_after_migration(self):
         """Tests freq_after_migration method"""
 
