@@ -8,7 +8,7 @@ setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/S
 
 #Load dataset varying migration rate and add distance column
 colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "pA", "pB", "Pop_size", "K", "Cyan")
-dat_Kvary_MigVary <- fread('20170810_Kvary_Migration_Merged.csv', select = colsToKeep, header = T)
+dat_Kvary_MigVary <- fread('20171028_Kvary-WithMig_AllFill_merged.csv', select = colsToKeep, header = T)
 dat_Kvary_MigVary$Distance  <- sqrt((dat_Kvary_MigVary$x - 0)^2 + (dat_Kvary_MigVary$y - 0)^2)
 
 #Run model testing for change in HCN, pA, and pB frequency with distance across matrix.
