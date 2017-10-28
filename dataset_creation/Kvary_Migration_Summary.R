@@ -4,7 +4,7 @@ library(data.table, lib="~/Rpackages")
 library(Rmisc, lib = "~/Rpackages")
 library(dplyr)
 
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Kvary_AllFill')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Kvary_AllFill')
 
 #Load dataset varying migration rate and add distance column
 colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "pA", "pB", "Pop_size", "K", "Cyan")
