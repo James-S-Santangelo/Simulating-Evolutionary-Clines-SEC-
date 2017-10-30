@@ -16,16 +16,22 @@ setwd('/Users/jamessantangelo/Desktop/CSV/Kvary')
 
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
-args <- list('0.00', '0.01', '0.05')
+args <- list('0.0000', '0.0010', '0.0025',
+             '0.0050', '0.0100', '0.0200',
+             '0.0350', '0.0500', '0.1000',
+             '0.2000', '0.3500', '0.5000'
+             '1.0000')
 merge_lm <- list()
 
 for(i in 1:length(args)){
+
+  print(i, args[i])
 
   #Load dataset varying migration rate and add distance column
   colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "pA", "pB", "Pop_size", "K", "Cyan")
   colClasses <- list(numeric = c("Cyan", "pA", "pB", "Mig_rate"),
                     integer = c("x", "y", "Sim", "Generation", "Pop_size", "K"))
-  name <-  sprintf('20171030_Kvary_AllFill(m%s).csv', args[i])
+  name <-  sprintf('20171025_drift_Kvary-AllFill(m%s).csv', args[i])
   dat_Kvary_MigVary <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
   dat_Kvary_MigVary$Distance  <- sqrt((dat_Kvary_MigVary$x - 0)^2 + (dat_Kvary_MigVary$y - 0)^2)
   dat_Kvary_MigVary$Mig_rate <- as.factor(as.character(dat_Kvary_MigVary$Mig_rate))
