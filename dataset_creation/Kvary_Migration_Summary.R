@@ -19,13 +19,13 @@ today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 args <- list('0.0000', '0.0010', '0.0025',
              '0.0050', '0.0100', '0.0200',
              '0.0350', '0.0500', '0.1000',
-             '0.2000', '0.3500', '0.5000'
+             '0.2000', '0.3500', '0.5000',
              '1.0000')
 merge_lm <- list()
 
 for(i in 1:length(args)){
 
-  print(i, args[i])
+  print(c(i, args[i]))
 
   #Load dataset varying migration rate and add distance column
   colsToKeep <- c("x", "y","Mig_rate", "Sim", "Generation", "pA", "pB", "Pop_size", "K", "Cyan")
