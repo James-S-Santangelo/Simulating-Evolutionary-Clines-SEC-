@@ -9,15 +9,15 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = 0.0
+    max_mig_rate = sys.argv[1]
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 1000
+    min_K = 10
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 40
+    num_cols = 15
     """int: Number of rows and number of columns in landscape matrix"""
 
     bot_prop = 1.0
