@@ -1,27 +1,29 @@
 #Load required packages
-library(broom)
-library(data.table)
-library(Rmisc)
-library(dplyr)
-
-#Load required packages
 # library(broom)
-# library(data.table, lib="~/Rpackages")
-# library(Rmisc, lib = "~/Rpackages")
+# library(data.table)
+# library(Rmisc)
 # library(dplyr)
 
-# setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Kvary_AllFill')
+#Load required packages
+library(broom)
+library(data.table, lib="~/Rpackages")
+library(Rmisc, lib = "~/Rpackages")
+library(dplyr)
 
-setwd('/Users/jamessantangelo/Desktop/CSV/Kvary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Kvary_AllFill')
+
+# setwd('/Users/jamessantangelo/Desktop/CSV/Kvary')
 
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
+# args <- list("0.00", "0.01", "0.05")
 args <- list('0.0000', '0.0010', '0.0025',
              '0.0050', '0.0100', '0.0200',
              '0.0350', '0.0500', '0.1000',
              '0.2000', '0.3500', '0.5000',
              '1.0000')
 merge_lm <- list()
+num_patches <- 40
 
 for(i in 1:length(args)){
 
@@ -33,7 +35,7 @@ for(i in 1:length(args)){
                     integer = c("x", "y", "Sim", "Generation", "Pop_size", "K"))
   name <-  sprintf('20171025_drift_Kvary-AllFill(m%s).csv', args[i])
   dat_Kvary_MigVary <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
-  dat_Kvary_MigVary$Distance  <- sqrt((dat_Kvary_MigVary$x - 0)^2 + (dat_Kvary_MigVary$y - 0)^2)
+  dat_Kvary_MigVary$Distance  <- num_patches - sqrt((dat_Kvary_MigVary$x - 0)^2 + (dat_Kvary_MigVary$y - 0)^2)
   dat_Kvary_MigVary$Mig_rate <- as.factor(as.character(dat_Kvary_MigVary$Mig_rate))
 
 
@@ -79,14 +81,14 @@ for(i in 1:length(args)){
 
 #Write dataset with all models to csv
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "Kvary-WithMig_Coef.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "Kvary-WithMig_Coef_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 
 #Get mean slope and proportion of significantly positive and negative slopes
 #from linear models. Averaged across simulations.
 #Confidence intervals are also calculated.
 SlopeSum_Gen <- merged_lm %>%
-  group_by(id, Mig_rate) %>%
+  group_by(id, Mig_rate, Generation) %>%
   summarize(mean = mean(estimate),
             sd = sd(estimate),
             n = length(estimate),
@@ -108,4 +110,4 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 #Wrtie dataset to disk
-fwrite(SlopeSum_Gen, file = paste(today, "Kvary-WithMig_SlopeSummary.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "Kvary-WithMig_SlopeSummaryGen_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)

@@ -16,7 +16,7 @@ library(broom)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Mig_Bot_Vary')
 
 # # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -24,6 +24,7 @@ args <- list('None', 'Low', 'High')
 # args <- commandArgs(trailingOnly = TRUE)
 merge_lm <- list()
 merge_FirstGen <- list()
+num_patches <- 40
 
 for (i in 1:length(args)){
 
@@ -32,10 +33,10 @@ for (i in 1:length(args)){
   colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "pA", "pB")
   colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
                    integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
-  name <-  sprintf('20170923_Drift_Mig-%s_Merged_R-test.csv', args[i])
+  name <-  sprintf('20170924_Drift_Mig-%s_Merged.csv', args[i])
   dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
   # print(str(dat))
-  dat$Distance  <- sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
+  dat$Distance  <- num_patches - sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
   # print(head(dat))
   dat$Mig_rate <- as.factor(as.character(dat$Mig_rate))
   dat$bot <- as.factor(as.character(dat$bot))
@@ -71,10 +72,10 @@ for (i in 1:length(args)){
 }
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "FitSimCoef_BotMig-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "FitSimCoef_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 merged_FreqFirstGen <- Reduce(function(...) merge(..., all = T), merge_FirstGen)
-fwrite(merged_FreqFirstGen, file = paste(today, "FreqFirstGen_BotMig-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_FreqFirstGen, file = paste(today, "FreqFirstGen_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 SlopeSum_Gen <- merged_lm %>%
   group_by(Sim, bot, Mig_rate) %>%
@@ -102,5 +103,5 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 
-fwrite(SlopeSum_Gen, file = paste(today, "SlopeSum_Gen_BotMig-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "SlopeSum_Gen_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
 
