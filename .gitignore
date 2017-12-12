@@ -10,3 +10,4 @@ build
 files.txt
 sec-venv
 *.pyc
+dataset_creation/.Rapp.history
