@@ -239,7 +239,7 @@ class Cell(object):
     def real_s(self):
         """Calculates selection coefficient of cells in the matrix
 
-        Calculates the relized selection coefficient of cells in the matrix. Selection favours HCN+ genotypes in the rural-most population and declines linearly until the middle of the matrix. Selection then switches and increases linearly, increasingly favouring HCN– towards the urban-most population.
+        Calculates the relized selection coefficient of cells in the matrix. Selection favours HCN+ genotypes in the rural-most population and declines linearly until the middle of the matrix. Selection then switches and increases linearly, increasingly favouring HCN- towards the urban-most population.
 
         Args:
             None
