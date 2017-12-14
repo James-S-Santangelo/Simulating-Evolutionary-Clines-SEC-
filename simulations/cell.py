@@ -9,15 +9,15 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = sys.argv[1]
+    max_mig_rate = 0.0
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 10
+    min_K = 1000
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 15
+    num_cols = 20
     """int: Number of rows and number of columns in landscape matrix"""
 
     bot_prop = 1.0
@@ -239,8 +239,7 @@ class Cell(object):
     def real_s(self):
         """Calculates selection coefficient of cells in the matrix
 
-        Calculates the relized selection coefficient of cells in the matrix, which declines linearly with increasing distance from the first
-        initialized landscape cell.
+        Calculates the relized selection coefficient of cells in the matrix. Selection favours HCN+ genotypes in the rural-most population and declines linearly until the middle of the matrix. Selection then switches and increases linearly, increasingly favouring HCN– towards the urban-most population.
 
         Args:
             None
@@ -248,16 +247,31 @@ class Cell(object):
         returns:
             K (float): Realized selection coefficient of landscape matrix cell.
         """
-        Cell.max_s = float(Cell.max_s)
         start_y = 0
         start_x = 0
-        dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
         max_i = Cell.num_rows - 1
         max_j = Cell.num_cols - 1
+
         max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
-        slope_s = (Cell.max_s - 0) / (max_dist - 0)
-        s = slope_s * dist
-        return round(s, 5)
+        mid_dist = round(max_dist / 2)
+
+        dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
+
+        if dist == mid_dist:
+            s = 0
+            return round(s, 0)
+        elif dist < mid_dist:
+            dist_from_mid = mid_dist - dist
+            max_s = float(Cell.max_s)
+            slope_s = (0 - (-max_s)) / (mid_dist - 0)
+            s = slope_s * dist - max_s
+            return round(s, 5)
+        elif dist > mid_dist:
+            dist_from_mid = dist - mid_dist
+            max_s = float(Cell.max_s)
+            slope_s = (max_s - 0) / (max_dist - mid_dist)
+            s = slope_s * dist_from_mid
+            return round(s, 5)
 
     def source_population_info(self, pop_list, Matrix):
         """Collects migration, allele frequency, and population size info from all source populations

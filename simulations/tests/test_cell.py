@@ -286,10 +286,9 @@ class TestCell(unittest.TestCase):
 
         # Correctly return selection coefficient for all cells with populations defined in setUp
         Cell.max_s = "0.001"
-        self.assertEqual(self.Matrix[0][0].real_s(), 0)
+        self.assertEqual(self.Matrix[0][0].real_s(), -0.001)
         self.assertEqual(self.Matrix[1][2].real_s(), 0.001)
-        self.assertEqual(self.Matrix[0][1].real_s(), 0.00045)
-        assert isinstance(Cell.max_s, float)
+        self.assertEqual(self.Matrix[0][1].real_s(), 0.0)
 
 
     @patch('simulations.cell.Cell.real_migration_rate')

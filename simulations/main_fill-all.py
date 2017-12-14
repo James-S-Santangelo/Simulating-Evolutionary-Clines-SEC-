@@ -24,7 +24,7 @@ def simulate():
     steps = 15
     """int: Number of generations"""
 
-    export_path = "/Users/jamessantangelo/Desktop/CSV/Kvary"
+    export_path = "/Users/jamessantangelo/Desktop/CSV/"
     """str: Path to where dataset should be exported"""
 
     print os.getpid()
