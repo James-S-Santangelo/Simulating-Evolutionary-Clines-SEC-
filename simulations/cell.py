@@ -9,11 +9,11 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    max_mig_rate = sys.argv[3]
+    max_mig_rate = sys.argv[2]
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 10
+    min_K = 1000
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
@@ -29,7 +29,7 @@ class Cell(object):
     max_create_prob = 1.0
     """float: Maximum probability of creating a new population"""
 
-    max_s = 0.0
+    max_s = sys.argv[1]
     """float: Maximum strength of selection acting against the cyanogenic phenotype"""
 
     def __init__(self, i, j, pop):
