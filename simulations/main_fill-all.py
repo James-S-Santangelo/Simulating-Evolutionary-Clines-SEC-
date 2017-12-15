@@ -18,14 +18,14 @@ def simulate():
         None
     """
 
-    sims = 1000
+    sims = 3
     """int: Number of simulations"""
 
-    steps = 500
+    steps = 15
     """int: Number of generations"""
 
-    # export_path = "/Users/jamessantangelo/Desktop/CSV/allFill_Selection"
-    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/selection-migration/all-fill"
+    export_path = "/Users/jamessantangelo/Desktop/CSV/allFill_Selection"
+    # export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/selection-migration/all-fill"
     """str: Path to where dataset should be exported"""
 
     print os.getpid()

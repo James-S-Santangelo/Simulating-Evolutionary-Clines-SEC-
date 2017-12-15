@@ -17,7 +17,7 @@ class Cell(object):
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 40
+    num_cols = 15
     """int: Number of rows and number of columns in landscape matrix"""
 
     bot_prop = 1.0
