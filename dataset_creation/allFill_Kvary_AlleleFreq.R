@@ -15,7 +15,7 @@ library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-setwd("/Users/jamessantangelo/Desktop/CSV/AlleleFreq")
+setwd("/Users/jamessantangelo/Desktop/CSV/allFill_Kvary_AlleleFreq")
 # setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 
@@ -23,8 +23,10 @@ setwd("/Users/jamessantangelo/Desktop/CSV/AlleleFreq")
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 args1 <- list('0.10', '0.50', '0.90')
 args2 <- list('0.10', '0.50', '0.90')
+args3 <- list('0.00', '0.01', '0.05')
 
 merge_lm = list()
+num_patches <- 40
 
 # merge_lm <- list()
 # merge_FirstGen <- list()
@@ -33,54 +35,59 @@ for (i in 1:length(args1)){
 
   for (j in 1:length(args2)){
 
-    print(c(i, j))
-    # Load dataset that varies the bottleneck proportion and add distance column
-    colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "pA", "pB")
-    colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
-                     integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
-    name <-  sprintf('20171007_AlleleFreq_OneFill(pA%s)(pB%s).csv', args1[i], args2[j])
-    dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
-    # print(str(dat))
-    dat$Distance  <- sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
-    # print(head(dat))
-    dat$pA <- as.factor(as.character(dat$pA))
-    dat$pB <- as.factor(as.character(dat$pB))
+    for (k in 1:length(args3)){
 
-    #Add starting pA and pB as column to dataframe
-    dat <- dat %>%
-      mutate(pA_start = args1[[i]], pB_start = args2[[j]])
 
-    #Run model testing for change in HCN frequency with distance across matrix. Performed separately for every simulation and generation, begining with the generation the matrix fill.
-    dat_lm <- dat %>%
-      filter(Mat_full == 1) %>%
-      group_by(Sim, pA_start, pB_start, Generation) %>%
-      do(FitSim = lm(Cyan ~ Distance, data = .))
+      print(c(i, j, k))
+      # Load dataset that varies the bottleneck proportion and add distance column
+      colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "pA", "pB")
+      colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
+                       integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
+      name <-  sprintf('allFill_Kvary_AlleleFreq(pA%s)(pB%s)(m%s).csv', args1[i], args2[j], args3[k])
+      dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
+      # print(str(dat))
+      dat$Distance  <- num_patches - sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
+      # print(head(dat))
+      dat$pA <- as.factor(as.character(dat$pA))
+      dat$pB <- as.factor(as.character(dat$pB))
+      dat$Mig_rate <- as.factor(as.character(dat$Mig_rate))
 
-    #Create data frame with results from linear morm(dels
-    FitSimCoef = tidy(dat_lm, FitSim)
+      #Add starting pA and pB as column to dataframe
+      dat <- dat %>%
+        mutate(pA_start = args1[[i]], pB_start = args2[[j]])
 
-    #Remove initial datasets
-    rm(dat, dat_lm)
+      #Run model testing for change in HCN frequency with distance across matrix. Performed separately for every simulation and generation, begining with the generation the matrix fill.
+      dat_lm <- dat %>%
+        filter(Mat_full == 1) %>%
+        group_by(Sim, Mig_rate, pA_start, pB_start, Generation) %>%
+        do(FitSim = lm(Cyan ~ Distance, data = .))
 
-    #Subset data frame to include only slopes and P-values for the effect of distance
-    dataset_lm <- FitSimCoef %>%
-      filter(term == "Distance") %>%
-      select(estimate, p.value)
+      #Create data frame with results from linear morm(dels
+      FitSimCoef = tidy(dat_lm, FitSim)
 
-    # print(head(dataset_lm))
-    dataset <- paste("Dataset", i, j, sep="")
-    merge_lm[[dataset]] <- dataset_lm
+      #Remove initial datasets
+      rm(dat, dat_lm)
+
+      #Subset data frame to include only slopes and P-values for the effect of distance
+      dataset_lm <- FitSimCoef %>%
+        filter(term == "Distance") %>%
+        select(estimate, p.value)
+
+      # print(head(dataset_lm))
+      dataset <- paste("Dataset", i, j, k, sep="")
+      merge_lm[[dataset]] <- dataset_lm
+    }
   }
 }
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "FitSimCoef_AlleleFreq-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "RegSummary_allFill_Kvary_AlleleFreq.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 SlopeSum_Gen <- merged_lm %>%
-  group_by(Sim, pA_start, pB_start) %>%
+  group_by(Sim, Mig_rate, pA_start, pB_start) %>%
   # filter(Generation %in% seq(from = min(Generation), to = max(Generation), by = 7)) %>%
   mutate(seq = 1:n()) %>%
-  group_by(pA_start, pB_start, seq) %>%
+  group_by(Mig_rate, pA_start, pB_start, seq) %>%
   summarize(mean = mean(estimate),
             sd = sd(estimate),
             n = length(estimate),
@@ -102,7 +109,7 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 
-fwrite(SlopeSum_Gen, file = paste(today, "SlopeSum_Gen_AlleleFreq-Merged.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "MeansProps_allFill_Kvary_AlleleFreq.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 
 
