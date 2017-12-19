@@ -3,20 +3,20 @@
 ###############
 
 #Load required packages
-library(Rmisc)
-library(dplyr)
-library(data.table)
-library(broom)
-
-# library(Rmisc, lib = "~/Rpackages")
+# library(Rmisc)
 # library(dplyr)
-# library(data.table, lib = "~/Rpackages")
+# library(data.table)
 # library(broom)
+
+library(Rmisc, lib = "~/Rpackages")
+library(dplyr)
+library(data.table, lib = "~/Rpackages")
+library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-setwd("/Users/jamessantangelo/Desktop/CSV/allFill_Kvary_AlleleFreq")
-# setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
+# setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary_AlleleFreq")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary_AlleleFreq')
 
 
 # # Globals
@@ -79,6 +79,9 @@ for (i in 1:length(args1)){
     }
   }
 }
+
+# setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary_AlleleFreq")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary_AlleleFreq')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "RegSummary_allFill_Kvary_AlleleFreq.csv", sep = "_"), sep = ",", col.names = TRUE)

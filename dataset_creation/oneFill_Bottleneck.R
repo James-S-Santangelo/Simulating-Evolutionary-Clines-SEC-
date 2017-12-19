@@ -15,8 +15,8 @@ library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-# setwd("/Users/jamessantangelo/Desktop/CSV")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Mig_Bot_Vary')
+# setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/oneFill_Bottlenecks')
 
 # # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -71,11 +71,14 @@ for (i in 1:length(args)){
 
 }
 
+# setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/oneFill_Bottlenecks")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/oneFill_Bottlenecks')
+
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "FitSimCoef_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "RegSummary_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 merged_FreqFirstGen <- Reduce(function(...) merge(..., all = T), merge_FirstGen)
-fwrite(merged_FreqFirstGen, file = paste(today, "FreqFirstGen_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_FreqFirstGen, file = paste(today, "FreqFirstGen_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 SlopeSum_Gen <- merged_lm %>%
   group_by(Sim, bot, Mig_rate) %>%
@@ -103,5 +106,5 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 
-fwrite(SlopeSum_Gen, file = paste(today, "SlopeSum_Gen_BotMig-Merged_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "MeansProps_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
 

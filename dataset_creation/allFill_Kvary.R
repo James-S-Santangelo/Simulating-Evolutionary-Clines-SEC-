@@ -10,9 +10,8 @@ library(data.table, lib="~/Rpackages")
 library(Rmisc, lib = "~/Rpackages")
 library(dplyr)
 
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/drift-migration/1D/Kvary_AllFill')
-
-# setwd('/Users/jamessantangelo/Desktop/CSV/Kvary')
+# setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary')
 
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -79,9 +78,12 @@ for(i in 1:length(args)){
   merge_lm[[i]] <- FitKvary_Mig_Coef
 }
 
+# setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary')
+
 #Write dataset with all models to csv
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "Kvary-WithMig_Coef_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "RegSummary_allFill_Kvary.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 
 #Get mean slope and proportion of significantly positive and negative slopes
@@ -110,4 +112,4 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 #Wrtie dataset to disk
-fwrite(SlopeSum_Gen, file = paste(today, "Kvary-WithMig_SlopeSummaryGen_distRev.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "MeansProps_allFill_Kvary.csv", sep = "_"), sep = ",", col.names = TRUE)
