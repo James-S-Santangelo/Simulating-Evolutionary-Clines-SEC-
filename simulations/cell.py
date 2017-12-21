@@ -9,18 +9,18 @@ from simulations import functions
 class Cell(object):
     """Controls cells in the landscape matrix"""
 
-    # max_mig_rate = sys.argv[3]
+    # max_mig_rate = sys.argv[2]
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 1000
+    # min_K = sys.argv[1]
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 40
+    num_cols = 15
     """int: Number of rows and number of columns in landscape matrix"""
 
-    # bot_prop = sys.argv[4]
+    bot_prop = 1.0
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created
@@ -226,6 +226,8 @@ class Cell(object):
         returns:
             K (float): Realized carrying capacity of landscape matrix cell.
         """
+        Cell.min_K = int(Cell.min_K)
+        Cell.max_K = int(Cell.max_K)
         start_y = 0
         start_x = 0
         dist = (((start_y - self.i) ** 2) + ((start_x - self.j) ** 2)) ** (0.5)
