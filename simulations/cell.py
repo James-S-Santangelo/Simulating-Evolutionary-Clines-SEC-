@@ -13,11 +13,11 @@ class Cell(object):
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    # min_K = sys.argv[1]
+    min_K = 10
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
-    num_cols = 15
+    num_cols = 40
     """int: Number of rows and number of columns in landscape matrix"""
 
     bot_prop = 1.0
@@ -29,7 +29,7 @@ class Cell(object):
     max_create_prob = 1.0
     """float: Maximum probability of creating a new population"""
 
-    max_s = 0.0
+    # max_s = sys.argv[1]
     """float: Maximum strength of selection acting against the cyanogenic phenotype"""
 
     def __init__(self, i, j, pop):
@@ -234,8 +234,16 @@ class Cell(object):
         max_i = Cell.num_rows - 1
         max_j = Cell.num_cols - 1
         max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
-        slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
-        K = Cell.max_K + slope_K * dist
+
+        # Slope and equation if gradient is from Rural to Urban
+        # slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
+        # K = Cell.max_K + slope_K * dist
+
+        # Slope if gradient is from Urban to Rural
+        slope_K = (Cell.max_K - Cell.min_K) / (max_dist - 0)
+        K = Cell.min_K + slope_K * dist
+
+
         return int(math.ceil(K))
 
     def real_s(self):
