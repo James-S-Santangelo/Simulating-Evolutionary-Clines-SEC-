@@ -236,12 +236,12 @@ class Cell(object):
         max_dist = (((max_j - start_x) ** 2) + ((max_i - start_y) ** 2)) ** (0.5)
 
         # Slope and equation if gradient is from Rural to Urban
-        # slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
-        # K = Cell.max_K + slope_K * dist
+        slope_K = (Cell.min_K - Cell.max_K) / (max_dist - 0)
+        K = Cell.max_K + slope_K * dist
 
         # Slope if gradient is from Urban to Rural
-        slope_K = (Cell.max_K - Cell.min_K) / (max_dist - 0)
-        K = Cell.min_K + slope_K * dist
+        # slope_K = (Cell.max_K - Cell.min_K) / (max_dist - 0)
+        # K = Cell.min_K + slope_K * dist
 
 
         return int(math.ceil(K))
