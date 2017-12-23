@@ -15,8 +15,8 @@ library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-# setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary_Selection")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary_Selection')
+# setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary_U-R_Selection")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary_U-R_Selection')
 
 
 # # Globals
@@ -39,7 +39,7 @@ for (i in 1:length(args1)){
     colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "max_s", "s")
     colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
                      integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
-    name <-  sprintf('allFill_Selection(s%s)(m%s).csv', args1[i], args2[j])
+    name <-  sprintf('allFill_Kvary_U-R_Selection(s%s)(m%s).csv', args1[i], args2[j])
     dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
     # print(str(dat))
     dat$Distance  <- num_patches - sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
@@ -71,11 +71,11 @@ for (i in 1:length(args1)){
   }
 }
 
-# setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary_Selection")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary_Selection')
+# setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary_U-R_Selection")
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary_U-R_Selection')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "RegSummary_allFill_Selection.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "RegSummary_allFill_U-R_Selection.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 SlopeSum_Gen <- merged_lm %>%
   group_by(Sim, Mig_rate, max_s) %>%
@@ -103,7 +103,7 @@ SlopeSum_Gen <- merged_lm %>%
             ci_sigNeg = 1.96*se_sigNeg)
 
 
-fwrite(SlopeSum_Gen, file = paste(today, "MeansProps_allFill_Selection.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(SlopeSum_Gen, file = paste(today, "MeansProps_allFill_U-R_Selection.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 
 
