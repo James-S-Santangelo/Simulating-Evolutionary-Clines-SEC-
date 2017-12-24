@@ -1,0 +1,1 @@
+This directory contains execuatable R-scripts that take as input the datasets returned from the simulations and produce as output the summary datasets found in ../SEC_Data/. The R-scripts are named according to the simulations and data that they analyze (see ../SEC/Data/README.md for naming conventions).
