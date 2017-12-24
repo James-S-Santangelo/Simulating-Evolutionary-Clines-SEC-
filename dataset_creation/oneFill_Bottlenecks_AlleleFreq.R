@@ -16,7 +16,7 @@ library(broom)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks_AlleleFreq")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary_AlleleFreq')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary_AlleleFreq')
 
 
 # # Globals
@@ -92,7 +92,7 @@ for (i in 1:length(args1)){
 }
 
 # setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/oneFill_Bottlenecks_AlleleFreq")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/oneFill_Bottlenecks_AlleleFreq')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/oneFill_Bottlenecks_AlleleFreq')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "RegSummary_oneFill_Bottlenecks_AlleleFreq.csv", sep = "_"), sep = ",", col.names = TRUE)

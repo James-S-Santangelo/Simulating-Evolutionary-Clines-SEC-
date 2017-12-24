@@ -16,7 +16,7 @@ library(broom)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/oneFill_Bottlenecks')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks')
 
 # # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -72,7 +72,7 @@ for (i in 1:length(args)){
 }
 
 # setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/oneFill_Bottlenecks")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/oneFill_Bottlenecks')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/oneFill_Bottlenecks')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "RegSummary_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)

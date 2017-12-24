@@ -16,7 +16,7 @@ library(broom)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary_U-R_Selection")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary_U-R_Selection')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary_U-R_Selection')
 
 
 # # Globals
@@ -72,7 +72,7 @@ for (i in 1:length(args1)){
 }
 
 # setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary_U-R_Selection")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary_U-R_Selection')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/allFill_Kvary_U-R_Selection')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "RegSummary_allFill_U-R_Selection.csv", sep = "_"), sep = ",", col.names = TRUE)

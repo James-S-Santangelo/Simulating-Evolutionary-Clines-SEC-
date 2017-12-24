@@ -25,7 +25,7 @@ def simulate():
     """int: Number of generations"""
 
     # export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks_AlleleFreq"
-    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/oneFill_Bottlenecks_AlleleFreq/"
+    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks_AlleleFreq/"
     """str: Path to where dataset should be exported"""
 
 

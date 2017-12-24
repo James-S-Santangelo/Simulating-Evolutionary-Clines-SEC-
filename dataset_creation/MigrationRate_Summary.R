@@ -5,7 +5,7 @@ library(Rmisc, lib = "~/Rpackages")
 library(dplyr)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/Drift.Migration/1D/Mig_Bot_Vary')
 
 #Load dataset varying migration rate and add distance column
 colsToKeep <- c("x", "y", "Mig_rate", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size")
