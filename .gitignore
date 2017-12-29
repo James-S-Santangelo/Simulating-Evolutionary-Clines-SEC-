@@ -1,6 +1,5 @@
 simulations.egg-info/
-SEC_Figures
-SEC_Notebooks
+SEC_Notebooks/Python_Notebooks
 SEC_Writings
 dataset_creation/Drift.R
 simulations/Old_Code/
