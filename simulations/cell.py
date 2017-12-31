@@ -13,14 +13,14 @@ class Cell(object):
     """float: Maximum migration rate between any two populations"""
 
     max_K = 1000
-    min_K = 10
+    min_K = 1000
     """int: Maximum and minimum carying capacity of cells across the matrix"""
 
     num_rows = 1
     num_cols = 40
     """int: Number of rows and number of columns in landscape matrix"""
 
-    bot_prop = 1.0
+    # bot_prop = sys.argv[3]
     """float: Bottleneck proportion
 
     Proportion of alleles sampled when new population is created

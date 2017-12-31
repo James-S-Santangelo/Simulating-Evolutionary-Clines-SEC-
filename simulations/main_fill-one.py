@@ -24,8 +24,8 @@ def simulate():
     steps = 500
     """int: Number of generations"""
 
-    # export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks_AlleleFreq"
-    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks_AlleleFreq/"
+    # export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks_U-R_Selection"
+    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks_U-R_Selection/"
     """str: Path to where dataset should be exported"""
 
 
@@ -35,7 +35,7 @@ def simulate():
     os.chdir(export_path)
     # datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open("oneFill_Bottlenecks_AlleleFreq(pA%.2f)(pB%.2f)(m%.2f)(bot%.2f).csv" % (float(Population.pA), float(Population.pB), float(Cell.max_mig_rate), float(Cell.bot_prop)), "wb") as f:
+    with open("oneFill_Bottlenecks_U-R_Selection(s%.4f)(m%.2f)(bot%.2f).csv" % (float(Cell.max_s), float(Cell.max_mig_rate), float(Cell.bot_prop)), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",
@@ -55,8 +55,8 @@ def simulate():
             locus_B = (['B'] * int(N * pB)) + (['b'] * int(round(N * qB)))
 
             Matrix = Cell.initialize_matrix()
-            Matrix[0][0].pop = True
-            Matrix[0][0].population = Population(N, locus_A, locus_B)
+            Matrix[0][39].pop = True
+            Matrix[0][39].population = Population(N, locus_A, locus_B)
 
             functions.cline(s, results, steps, Matrix)
 
