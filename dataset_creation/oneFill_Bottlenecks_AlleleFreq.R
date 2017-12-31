@@ -16,7 +16,7 @@ library(broom)
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks_AlleleFreq")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary_AlleleFreq')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks_AlleleFreq')
 
 
 # # Globals
