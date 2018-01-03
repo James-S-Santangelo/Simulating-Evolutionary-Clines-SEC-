@@ -1,8 +1,9 @@
 simulations.egg-info/
-SEC_Notebooks/Python_Notebooks/.ipynb_checkpoints
+
 SEC_Notebooks/Python_Notebooks
-!/SEC_Notebooks/Python_Notebooks/Logistic-Pop-Growth.ipynb
-!/SEC_Notebooks/Python_Notebooks/selection-affect-LD.ipynb
+!SEC_Notebooks/Python_Notebooks/Logistic-Pop-Growth.ipynb
+!SEC_Notebooks/Python_Notebooks/selection-affect-LD.ipynb
+
 dataset_creation/Drift.R
 simulations/Old_Code/
 simulations/tests/__pycache__/
