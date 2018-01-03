@@ -1,0 +1,161 @@
+---
+title: "20170223_Mig.vary.results"
+author: "James Santangelo"
+date: "3/23/2017"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r, include = FALSE}
+library(data.table)
+library(plyr)
+library(ggplot2)
+
+ng1=theme(aspect.ratio=0.7,panel.background = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.border=element_blank(),
+          axis.line.x = element_line(color="black",size=1), 
+          axis.line.y = element_line(color="black",size=1),
+          axis.ticks=element_line(color="black"), 
+          axis.text=element_text(color="black",size=15), 
+          axis.title=element_text(color="black",size=1), 
+          axis.title.y=element_text(vjust=2,face="bold",size=15),
+          axis.title.x=element_text(vjust=0.1,face="bold",size=15),
+          axis.text.x=element_text(size=13),
+          axis.text.y=element_text(size=13),
+          legend.position = "right", legend.direction="vertical", 
+          legend.text=element_text(size=11), legend.key = element_rect(fill = "white"), 
+          legend.title = element_text(size=13,face="bold"),legend.key.size = unit(0.5, "cm"))
+
+ng1.45=theme(aspect.ratio=0.7,panel.background = element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.border=element_blank(),
+          axis.line.x = element_line(color="black",size=1), 
+          axis.line.y = element_line(color="black",size=1),
+          axis.ticks=element_line(color="black"), 
+          axis.text=element_text(color="black",size=15), 
+          axis.title=element_text(color="black",size=1), 
+          axis.title.y=element_text(vjust=2,face="bold",size=15),
+          axis.title.x=element_text(vjust=0.1,face="bold",size=15),
+          axis.text.x=element_text(size=13,angle=45,hjust=1),
+          axis.text.y=element_text(size=13),
+          legend.position = "right", legend.direction="vertical", 
+          legend.text=element_text(size=11), legend.key = element_rect(fill = "white"), 
+          legend.title = element_text(size=13,face="bold"),legend.key.size = unit(0.5, "cm"))
+
+setwd("/Users/jamessantangelo/Documents/Academia/Doctorate (PhD)/Projects/SEC - Simulating.evolutionary.clines/SEC_Data/Drift.Migration/MigVary")
+dat <- read.csv("20170323_Mig.vary_Means.csv", header = T)
+dat_Mean = ddply(dat,.(Distance, Mig_rate), summarize, Acyan = mean(Acyan))
+
+dat0 <- subset(dat, Mig_rate == 0)
+dat0_05 <- subset(dat, Mig_rate == 0.05 )
+dat0_10 <- subset(dat, Mig_rate == 0.10 )
+dat0_15 <- subset(dat, Mig_rate == 0.15 )
+dat0_20 <- subset(dat, Mig_rate == 0.20 )
+dat0_25 <- subset(dat, Mig_rate == 0.25 )
+dat0_30 <- subset(dat, Mig_rate == 0.30 )
+dat0_35 <- subset(dat, Mig_rate == 0.35 )
+dat0_40 <- subset(dat, Mig_rate == 0.40 )
+dat0_45 <- subset(dat, Mig_rate == 0.45 )
+dat0_50 <- subset(dat, Mig_rate == 0.50 )
+
+dat0_Mean_Sub = subset(dat0, Distance < 10)
+dat0_05_Mean_Sub = subset(dat0_05, Distance < 10)
+dat0_10_Mean_Sub = subset(dat0_10, Distance < 10)
+dat0_15_Mean_Sub = subset(dat0_15, Distance < 10)
+dat0_20_Mean_Sub = subset(dat0_20, Distance < 10)
+dat0_25_Mean_Sub = subset(dat0_25, Distance < 10)
+dat0_30_Mean_Sub = subset(dat0_30, Distance < 10)
+dat0_35_Mean_Sub = subset(dat0_35, Distance < 10)
+dat0_40_Mean_Sub = subset(dat0_40, Distance < 10)
+dat0_45_Mean_Sub = subset(dat0_45, Distance < 10)
+dat0_50_Mean_Sub = subset(dat0_50, Distance < 10)
+
+model0 <- lm(Acyan ~ Distance, data = dat0_Mean_Sub)
+model0_05 <- lm(Acyan ~ Distance, data = dat0_05_Mean_Sub)
+model0_10 <- lm(Acyan ~ Distance, data = dat0_10_Mean_Sub)
+model0_15 <- lm(Acyan ~ Distance, data = dat0_15_Mean_Sub)
+model0_20 <- lm(Acyan ~ Distance, data = dat0_20_Mean_Sub)
+model0_25 <- lm(Acyan ~ Distance, data = dat0_25_Mean_Sub)
+model0_30 <- lm(Acyan ~ Distance, data = dat0_30_Mean_Sub)
+model0_35 <- lm(Acyan ~ Distance, data = dat0_35_Mean_Sub)
+model0_40 <- lm(Acyan ~ Distance, data = dat0_40_Mean_Sub)
+model0_45 <- lm(Acyan ~ Distance, data = dat0_45_Mean_Sub)
+model0_50 <- lm(Acyan ~ Distance, data = dat0_50_Mean_Sub)
+
+slope0 <- summary(model0)$coefficients[2]
+slope0_05 <- summary(model0_05)$coefficients[2]
+slope0_10 <- summary(model0_10)$coefficients[2]
+slope0_15 <- summary(model0_15)$coefficients[2]
+slope0_20 <- summary(model0_20)$coefficients[2]
+slope0_25 <- summary(model0_25)$coefficients[2]
+slope0_30 <- summary(model0_30)$coefficients[2]
+slope0_35 <- summary(model0_35)$coefficients[2]
+slope0_40 <- summary(model0_40)$coefficients[2]
+slope0_45 <- summary(model0_45)$coefficients[2]
+slope0_50 <- summary(model0_50)$coefficients[2]
+
+slopes <- rbind(slope0, slope0_05, slope0_10, slope0_15, 
+                slope0_20, slope0_25, slope0_30, slope0_35, slope0_40,
+               slope0_45, slope0_50)
+Mig_rates <- rbind(0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50)
+dat_slopes_mig <- as.data.frame(cbind(slopes, Mig_rates))
+names(dat_slopes_mig)[names(dat_slopes_mig) == "V1"] <- "slope"
+names(dat_slopes_mig)[names(dat_slopes_mig) == "V2"] <- "Mig_rate"
+```
+
+# Migration rate simulations
+
+I took the following steps when analyzing the effects of migration on the presence and strength of spatial clines in cyanogenesis:
+
+1. Calculate the distance of each population from the initial starting population: the initial population has distance = 0.
+2. For every distance value, calculate the mean phenotype frequency (i.e. acyanogenesis), averaged over all 1000 simulations. Note that this can be done since the matrix is of a fixed size and thus the distance values correspond with one another across simulations. I performed this operation separately for each value of the migration rate. 
+3. Run a linear regression of the frequency of acyanogenesis as a function of distance from initial population. Plot this relationship and extract the slope. 
+
+Below is an example figure of the frequency of acyanogenesis as a function of distance **with miration rate = 0.**
+
+```{r, echo = FALSE, fig.width = 5, fig.asp = 0.7, fig.align='center', fig.show = 'hold', fig.cap = "Frequency of acyanogenesis as a function on distance to initial population. Uses all populations", fig.pos = 'h'}
+plotAcyan_0 <- ggplot(dat0, aes(x = Distance, y = Acyan)) + 
+  geom_smooth(method=lm,se=F,color="black")+
+  ylab("Frequency of Acyanogenesis")+xlab("Distance to first population")+geom_point(size=3)
+plotAcyan_0 + ng1
+```
+
+And here is the output from the linear model:
+
+```{r, echo = FALSE}
+model0_raw = lm(Acyan ~ Distance, data = dat0)
+summary(model0_raw)
+```
+
+Figure 1 shows that above 10 'km' there is a lot of variation in the frequency of acyanogenesis. This is because the mean is based on only a few (e.g. 1 or 2) populations across all simulations that made it that far in the matrix. This echo one of Marc's earlier points asking me if the matrix had filled by the end of the simulations. The answer is clearly no. **In future, I suggest we constrain the matrix to be smaller and increase the number of generations from 100 to 400.** The result of this increased variation is that there is no significant cline in acyanogenesis. This pattern was true regarless of the migration rate (since migration and colonization are independent processes). Therefore, I subsetted all datasets to include only populations with 10 'km' of the initial population to eliminate the variation resulting from an incompetely fille matrix. Plot and output follow:
+
+```{r, echo = FALSE, fig.width = 5, fig.asp = 0.7, fig.align='center', fig.show = 'hold', fig.cap = "Frequency of acyanogenesis as a function of distance to initial population. Only includes populations within 10 km of initials population", fig.pos = 'h'}
+plotAcyan_0_Sub <- ggplot(dat0_Mean_Sub, aes(x = Distance, y = Acyan)) + 
+  geom_smooth(method=lm,se=F,color="black")+
+  ylab("Frequency of Acyanogenesis")+xlab("Distance to first population")+geom_point(size=3)
+plotAcyan_0_Sub + ng1
+```
+
+```{r, echo = FALSE}
+model0_raw = lm(Acyan ~ Distance, data = dat0_Mean_Sub)
+summary(model0_raw)
+```
+
+We now see that the frequency of acyanogenesis increases with increasing distance from the initial population (P < 0.001).
+
+I performed the same analysis for all values of the migration rate, extracted the slopes and below I show how the stregth of the cline varies as we increase the migration rate. 
+
+```{r, echo = FALSE, fig.width = 5, fig.asp = 0.7, fig.align='center', fig.show = 'hold', fig.cap = "Strength of the cline in acyanogenesis as a function of migration rate", fig.pos = 'h'}
+plot_slope_mig <- ggplot(dat_slopes_mig, aes(x = factor(Mig_rate), y = slope)) + 
+  ylab("Slope of cline") + xlab("Migration rate") + 
+  geom_bar(stat="identity", color = "black",fill="grey")
+plot_slope_mig + ng1.45
+```
+
+I can't make sense of these results. 
+
+Of course one possibility is that my code is not doing what I think it is doing and migration is not being modelled properly. I suggest that Rob and I go over it sometime soon to get a fresh pair of eyes on it. I will keep looking over my code but for now I don't see any issues. 
