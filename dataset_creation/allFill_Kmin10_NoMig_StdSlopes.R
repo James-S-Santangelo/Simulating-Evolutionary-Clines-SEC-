@@ -1,8 +1,8 @@
 #Load required packages
-library(broom)
-library(data.table)
-library(Rmisc)
-library(dplyr)
+# library(broom)
+# library(data.table)
+# library(Rmisc)
+# library(dplyr)
 
 #Load required packages
 library(broom)
@@ -11,7 +11,7 @@ library(Rmisc, lib = "~/Rpackages")
 library(dplyr)
 
 # setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
 
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -65,7 +65,7 @@ for(i in 1:length(args1)){
 }
 
 # setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
+setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
 
 #Write dataset with all models to csv
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
