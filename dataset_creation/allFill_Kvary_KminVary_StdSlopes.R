@@ -16,10 +16,10 @@ setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/S
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 # args <- list("0.00", "0.01", "0.05")
-args1 <- list("0.00")
-args2 <- list('10')
+args1 <- list('0.00', '0.01', '0.05')
+args2 <- list('10', '100', '500', '1000')
 merge_lm <- list()
-num_patches <- 40
+num_patches <- 15
 
 for(i in 1:length(args1)){
 
@@ -69,5 +69,5 @@ setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/S
 
 #Write dataset with all models to csv
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
-fwrite(merged_lm, file = paste(today, "StdSlopes_allFill_Kvary_Kmin10_NoMig.csv", sep = "_"), sep = ",", col.names = TRUE)
+fwrite(merged_lm, file = paste(today, "StdSlopes_allFill_Kvary_KminVary.csv", sep = "_"), sep = ",", col.names = TRUE)
 
