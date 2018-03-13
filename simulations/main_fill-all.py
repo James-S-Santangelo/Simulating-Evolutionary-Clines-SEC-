@@ -18,10 +18,10 @@ def simulate():
         None
     """
 
-    sims = 1000
+    sims = 3
     """int: Number of simulations"""
 
-    steps = 500
+    steps = 15
     """int: Number of generations"""
 
     # export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/allFIll_U-R_Selection"

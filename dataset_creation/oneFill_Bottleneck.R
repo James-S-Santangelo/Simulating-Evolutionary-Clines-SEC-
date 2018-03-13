@@ -3,82 +3,94 @@
 ###############
 
 #Load required packages
-# library(Rmisc)
-# library(dplyr)
-# library(data.table)
-# library(broom)
-
-library(Rmisc, lib = "~/Rpackages")
+library(Rmisc)
 library(dplyr)
-library(data.table, lib = "~/Rpackages")
+library(data.table)
 library(broom)
+
+# library(Rmisc, lib = "~/Rpackages")
+# library(dplyr)
+# library(data.table, lib = "~/Rpackages")
+# library(broom)
 
 
 #Working directory for datasets varying migration rate and bottleneck proportion
 # setwd("/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/oneFill_Bottlenecks')
+setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/oneFill_Bottlenecks')
 
 # # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
-args <- list('None', 'Low', 'High')
-# args <- commandArgs(trailingOnly = TRUE)
+args1 <- list('0.00', '0.01', '0.05')
+args2 <- list('0.010', '0.020', '0.035', '0.050', '0.075', '0.100', '0.200', '0.500', '0.750', '1.000')
 merge_lm <- list()
 merge_FirstGen <- list()
-num_patches <- 40
+merge_PopSize <- list()
+num_patches <- 15
 
-for (i in 1:length(args)){
+for (i in 1:length(args1)){
 
-  print(i)
-  # Load dataset that varies the bottleneck proportion and add distance column
-  colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "pA", "pB")
-  colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
-                   integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
-  name <-  sprintf('20170924_Drift_Mig-%s_Merged.csv', args[i])
-  dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
-  # print(str(dat))
-  dat$Distance  <- num_patches - sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
-  # print(head(dat))
-  dat$Mig_rate <- as.factor(as.character(dat$Mig_rate))
-  dat$bot <- as.factor(as.character(dat$bot))
+  for (j in 1:length(args2)){
 
-  #Run model testing for change in HCN frequency with distance across matrix. Performed separately for every simulation and generation, begining with the generation the matrix fill.
-  dat_lm <- dat %>%
-    filter(Mat_full == 1) %>%
-    group_by(Sim, Mig_rate, bot, Generation) %>%
-    do(FitSim = lm(Cyan ~ Distance, data = .))
+    print(i)
+    # Load dataset that varies the bottleneck proportion and add distance column
+    colsToKeep <- c("x", "y","bot", "Sim", "Generation", "Cyan", "Mat_full", "Pop_size", "Mig_rate", "pA", "pB")
+    colClasses <- list(numeric = c("Cyan", "bot", "Mig_rate"),
+                     integer = c("x", "y", "Sim", "Generation", "Mat_full", "Pop_size"))
+    name <- sprintf('oneFill_Bottlenecks(m%s)(bot%s).csv', args1[i], args2[j])
+    dat <- fread(name, select = colsToKeep, colClasses = colClasses, header = T)
+    # print(str(dat))
+    dat$Distance  <- num_patches - sqrt((dat$x - 0)^2 + (dat$y - 0)^2)
+    # print(head(dat))
+    dat$Mig_rate <- as.factor(as.character(dat$Mig_rate))
+    dat$bot <- as.factor(as.character(dat$bot))
 
-  dat_FreqFirstGen <- dat %>%
-    group_by(Sim, Mig_rate, bot, Distance) %>%
-    slice(which.min(Generation))
+    #Run model testing for change in HCN frequency with distance across matrix. Performed separately for every simulation and generation, begining with the generation the matrix fill.
+    dat_lm <- dat %>%
+      filter(Mat_full == 1) %>%
+      group_by(Sim, Mig_rate, bot, Generation) %>%
+      do(FitSim = lm(Cyan ~ Distance, data = .))
 
-  #Create data frame with results from linear morm(dels
-  FitSimCoef = tidy(dat_lm, FitSim)
+    #Get frequency of HCN in first generation of population's existence for every population
+    dat_FreqFirstGen <- dat %>%
+      group_by(Sim, Mig_rate, bot, Distance) %>%
+      slice(which.min(Generation))
 
-  #Remove initial datasets
-  rm(dat, dat_lm)
+    #Get size of population for every population every generation, averaged across simulations
+    dat_PopSize <- dat %>%
+      filter(Mat_full == 1 & Distance == min(Distance)) %>%
+      group_by(Sim, Mig_rate, bot, Distance) %>%
+      mutate(seq = 1:n()) %>%
+      select(bot, Sim, Generation, Pop_size, Distance, seq)
 
-  #Subset data frame to include only slopes and P-values for the effect of distance
-  dataset_lm <- FitSimCoef %>%
-    filter(term == "Distance") %>%
-    select(estimate, p.value)
+    #Create data frame with results from linear models
+    FitSimCoef = tidy(dat_lm, FitSim)
 
-  merge_lm[[i]] <- dataset_lm
-  merge_FirstGen[[i]] <- dat_FreqFirstGen
+    #Remove initial datasets
+    rm(dat, dat_lm)
 
-  #Write dataset with all models to csv
-  # name = sprintf("FitSimCoef_Mig-%s.csv", args[i])
-  # fwrite(FitSimCoef, file = paste(today, name, sep = "_"), sep = ",", col.names = TRUE)
+    #Subset data frame to include only slopes and P-values for the effect of distance
+    dataset_lm <- FitSimCoef %>%
+      filter(term == "Distance") %>%
+      select(estimate, p.value)
 
+    dataset <- paste("Dataset", i, j, sep="")
+    merge_lm[[dataset]] <- dataset_lm
+    merge_FirstGen[[dataset]] <- dat_FreqFirstGen
+    merge_PopSize[[dataset]] <- dat_PopSize
+  }
 }
 
 # setwd("/Users/jamessantangelo/Desktop/CSV/summary-datasets/oneFill_Bottlenecks")
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/oneFill_Bottlenecks')
+setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/oneFill_Bottlenecks')
 
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)
 fwrite(merged_lm, file = paste(today, "RegSummary_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 merged_FreqFirstGen <- Reduce(function(...) merge(..., all = T), merge_FirstGen)
 fwrite(merged_FreqFirstGen, file = paste(today, "FreqFirstGen_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
+
+merged_PopSize <- Reduce(function(...) merge(..., all = T), merge_PopSize)
+fwrite(merged_PopSize, file = paste(today, "PopSize_oneFill_Bottlenecks.csv", sep = "_"), sep = ",", col.names = TRUE)
 
 SlopeSum_Gen <- merged_lm %>%
   group_by(Sim, bot, Mig_rate) %>%
