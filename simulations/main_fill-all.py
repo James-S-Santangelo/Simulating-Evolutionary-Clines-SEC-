@@ -24,8 +24,8 @@ def simulate():
     steps = 15
     """int: Number of generations"""
 
-    # export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/allFIll_U-R_Selection"
-    export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary_U-R_Selection"
+    export_path = "/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary/allFill_Kvary_Kmin10_AllMig"
+    # export_path = "/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/raw-data/allFill_Kvary_U-R_Selection"
     """str: Path to where dataset should be exported"""
 
     print os.getpid()
@@ -33,7 +33,7 @@ def simulate():
     os.chdir(export_path)
     # datestring = datetime.strftime(datetime.now(), '%Y%m%d')
 
-    with open("allFill_Kvary_U-R_Selection(s%.4f)(m%.2f).csv" % (float(Cell.max_s), float(Cell.max_mig_rate)), "wb") as f:
+    with open("allFill_Kvary(Kmin%.d)(m%.4f).csv" % (float(Cell.min_K), float(Cell.max_mig_rate)), "wb") as f:
         writer = csv.writer(f)
         writer.writerow(["Sim", "x", "y", "Generation", "pA", "pB", "Cyan",
                          "p_create", "K", "r", "bot", "Mig_rate", "Mat_full",

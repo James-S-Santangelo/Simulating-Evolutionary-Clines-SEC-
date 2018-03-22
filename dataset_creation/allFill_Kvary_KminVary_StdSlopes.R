@@ -1,17 +1,17 @@
 #Load required packages
-# library(broom)
-# library(data.table)
-# library(Rmisc)
-# library(dplyr)
-
-#Load required packages
 library(broom)
-library(data.table, lib="~/Rpackages")
-library(Rmisc, lib = "~/Rpackages")
+library(data.table)
+library(Rmisc)
 library(dplyr)
 
-# setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
+#Load required packages
+# library(broom)
+# library(data.table, lib="~/Rpackages")
+# library(Rmisc, lib = "~/Rpackages")
+# library(dplyr)
+
+setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
+# setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/raw-data/allFill_Kvary/allFill_Kvary_KminVary')
 
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
@@ -49,8 +49,6 @@ for(i in 1:length(args1)){
     #Create data frame with results from linear models of Cyan
     FitKvary_Mig_Coef_Cyan = tidy(dat_Kvary_Mig_lm, FitMigSimCyan)
 
-    print(FitKvary_Mig_Coef_Cyan)
-
     rm(dat_Kvary_MigVary, dat_Kvary_Mig_lm)
 
     #Function to filter summarize linear model datasets
@@ -64,8 +62,8 @@ for(i in 1:length(args1)){
   }
 }
 
-# setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
-setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
+setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
+# setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Data/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
 
 #Write dataset with all models to csv
 merged_lm <- Reduce(function(...) merge(..., all = T), merge_lm)

@@ -16,9 +16,9 @@ setwd('/Users/jamessantangelo/Desktop/CSV/raw-data/allFill_Kvary/allFill_Kvary_K
 # Globals
 today <- gsub("-","",format(Sys.Date(), formate = "$Y$m$d"))
 # args <- list("0.00", "0.01", "0.05")
-args1 <- list("0.0000", "0.001", "0.0025", "0.0050", "0.0100",
+args1 <- list("0.0000", "0.0010", "0.0025", "0.0050", "0.0100",
               "0.0200", "0.0350", "0.0500", "0.1000",
-              "0.2000", "0.3500", "0.5000")
+              "0.2000", "0.3500", "0.5000", "1.0000")
 args2 <- list('10')
 merge_lm <- list()
 num_patches <- 40
@@ -82,7 +82,7 @@ for(i in 1:length(args1)){
   }
 }
 
-setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary/Kmin10_AllMig')
+setwd('/Users/jamessantangelo/Desktop/CSV/summary-datasets/allFill_Kvary/allFill_Kvary_Kmin10_AllMig')
 # setwd('/scratch/research/projects/trifolium/SEC_Simulation.Evolutionary.Clines/SEC_Git/SEC_Data/summary-datasets/allFill_Kvary/allFill_Kvary_KminVary')
 
 #Write dataset with all models to csv
