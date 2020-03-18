@@ -1,18 +1,20 @@
 [![Build Status](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.svg?branch=master)](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-)
 
-**Example raw datasets and summary datasets can be found [HERE](https://www.dropbox.com/sh/nwqfc1pkfqg2hsn/AAA2vTDkLhjsSNoBVRfpZr8Ka?dl=0). Unzip the folders and read the README.md files for details on the datasets. All datasets will be publically available on DataDryad following publication.**
+##### Project: Simulating Evolutionary Clines (SEC)
+##### Manuscript: Modern spandrels: the roles of genetic drift, gene flow and natural selection in the evolution of parallel clines
+##### Authors: James S. Santangelo, Marc T.J. Johnson, and Rob W. Ness
 
-**A preprint of the manuscript, which has been accepted at _Proceeding of the Royal Society B_, is available on [bioRxiv](https://www.biorxiv.org/content/early/2018/03/27/289777).**
 
-# Simulating Evolutionary Clines (SEC)
-### Author: James Santangelo
+This project has been published in [Proceeding of the Royal Society B](https://www.dropbox.com/s/9kmxiegm9o1u2ej/Santangelo%2C%20Johnson%2C%20Ness%20-%202018%20-%20Modern%20spandrels%20the%20roles%20of%20genetic%20drift%2C%20gene%20flow%20and%20natural%20selection%20in%20the%20evolution%20of%20para.pdf?dl=0)
 
-## Background
+Example raw and summary datasets are available on [Dryad](https://datadryad.org/stash/dataset/doi:10.5061/dryad.6nv2t4p)
+
+### Abstract
 
 Urban environments offer the opportunity to study the role of adaptive and non-adaptive evolutionary processes on an unprecedented scale. While the presence of parallel clines in heritable phenotypic traits is often considered strong evidence for the role of natural selection, non-adaptive evolutionary processes can also generate clines, and this may be more likely when traits have a non-additive genetic basis due to epistasis. In this paper, we use spatially-explicit simulations modelled according to the cyanogenesis (HCN) polymorphism in white clover (Trifolium repens) to examine the formation of phenotypic clines along urbanization gradients under varying levels of drift, gene flow and selection. HCN results from an epistatic interaction between two Mendelian-inherited loci. Our results demonstrate that the genetic architecture of this trait makes natural populations susceptible to decreases in HCN frequencies via drift. Gradients in the strength of drift across a landscape resulted in phenotypic clines with lower frequencies of HCN in strongly drifting populations, giving the misleading appearance of deterministic adaptive changes in the phenotype. Studies of heritable phenotypic change in urban populations should generate null models of phenotypic evolution based on the genetic architecture underlying focal traits prior to invoking selection’s role in generating adaptive differentiation.
 
 
-## How to use the code
+### How to use the code
 
 simulations/ contains all the code necessary to run the simulations. Simulation are run using [PyPy](https://pypy.org/) but can alternatively be run using python 2.7, although the runtime will be substantially longer. The simulations can be run as follows:
 
