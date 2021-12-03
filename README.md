@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5753217.svg)](https://doi.org/10.5281/zenodo.5753217)
 [![Build Status](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.svg?branch=master)](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-)
 
 ## Project: Simulating Evolutionary Clines (SEC)
