@@ -1,12 +1,10 @@
 [![Build Status](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-.svg?branch=master)](https://travis-ci.org/James-S-Santangelo/Simulating-Evolutionary-Clines-SEC-)
 
-##### Project: Simulating Evolutionary Clines (SEC)
-##### Manuscript: Modern spandrels: the roles of genetic drift, gene flow and natural selection in the evolution of parallel clines
+## Project: Simulating Evolutionary Clines (SEC)
+### Manuscript: Modern spandrels: the roles of genetic drift, gene flow and natural selection in the evolution of parallel clines
 ##### Authors: James S. Santangelo, Marc T.J. Johnson, and Rob W. Ness
 
-
-This project has been published in [Proceeding of the Royal Society B](https://www.dropbox.com/s/9kmxiegm9o1u2ej/Santangelo%2C%20Johnson%2C%20Ness%20-%202018%20-%20Modern%20spandrels%20the%20roles%20of%20genetic%20drift%2C%20gene%20flow%20and%20natural%20selection%20in%20the%20evolution%20of%20para.pdf?dl=0)
-
+This project has been published in [Proceeding of the Royal Society B](https://royalsocietypublishing.org/doi/10.1098/rspb.2018.0230) <br>
 Example raw and summary datasets are available on [Dryad](https://datadryad.org/stash/dataset/doi:10.5061/dryad.6nv2t4p)
 
 ### Abstract
