@@ -9,6 +9,7 @@ notebooks/R_Notebooks/.ipynb_checkpoints
 notebooks/Python_Notebooks/*
 !notebooks/Python_Notebooks/Logistic-Pop-Growth.ipynb
 !notebooks/Python_Notebooks/selection-affect-LD.ipynb
+!notebooks/Python_Notebooks/Migration_functions_example.ipynb
 
 dataset_creation/Drift.R
 simulations/Old_Code/
